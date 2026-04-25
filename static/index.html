@@ -7,20 +7,20 @@
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
 <style>
   :root {
-    --bg:       #080b10;
-    --surface:  #0d1117;
-    --panel:    #111820;
-    --border:   #1e2d3d;
-    --border2:  #243447;
-    --text:     #cdd9e5;
-    --muted:    #637a91;
-    --accent:   #39d353;
-    --accent2:  #58a6ff;
-    --warn:     #f0a832;
-    --danger:   #f85149;
-    --drift:    #e8833a;
-    --glow:     rgba(57,211,83,0.15);
-    --glow2:    rgba(88,166,255,0.12);
+    --bg:      #080b10;
+    --surface: #0d1117;
+    --panel:   #111820;
+    --border:  #1e2d3d;
+    --border2: #243447;
+    --text:    #cdd9e5;
+    --muted:   #637a91;
+    --accent:  #39d353;
+    --accent2: #58a6ff;
+    --warn:    #f0a832;
+    --danger:  #f85149;
+    --drift:   #e8833a;
+    --glow:    rgba(57,211,83,0.15);
+    --glow2:   rgba(88,166,255,0.12);
   }
 
   * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -33,7 +33,6 @@
     overflow-x: hidden;
   }
 
-  /* animated grid bg */
   body::before {
     content: '';
     position: fixed;
@@ -42,98 +41,54 @@
       linear-gradient(var(--border) 1px, transparent 1px),
       linear-gradient(90deg, var(--border) 1px, transparent 1px);
     background-size: 40px 40px;
-    opacity: 0.25;
+    opacity: 0.2;
     pointer-events: none;
     z-index: 0;
   }
 
   .wrap { position: relative; z-index: 1; }
 
-  /* ── HEADER ── */
   header {
-    display: flex;
-    align-items: center;
-    gap: 20px;
-    padding: 18px 28px;
-    background: rgba(13,17,23,0.85);
+    display: flex; align-items: center; gap: 20px;
+    padding: 16px 28px;
+    background: rgba(13,17,23,0.9);
     backdrop-filter: blur(12px);
     border-bottom: 1px solid var(--border);
-    position: sticky;
-    top: 0;
-    z-index: 100;
+    position: sticky; top: 0; z-index: 100;
   }
 
-  .logo {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-  }
+  .logo { display: flex; align-items: center; gap: 10px; }
 
   .logo-icon {
-    width: 36px;
-    height: 36px;
+    width: 36px; height: 36px;
     background: linear-gradient(135deg, #1a3a2a, #0d2218);
-    border: 1px solid var(--accent);
-    border-radius: 8px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 18px;
-    box-shadow: 0 0 12px var(--glow);
+    border: 1px solid var(--accent); border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px; box-shadow: 0 0 12px var(--glow);
   }
 
-  .logo h1 {
-    font-size: 1.15rem;
-    font-weight: 800;
-    color: #fff;
-    letter-spacing: -0.02em;
-  }
-
+  .logo h1 { font-size: 1.15rem; font-weight: 800; color: #fff; letter-spacing: -0.02em; }
   .logo h1 span { color: var(--accent); }
+  .logo p { font-family: 'JetBrains Mono', monospace; font-size: 0.62rem; color: var(--muted); margin-top: 1px; }
 
-  .logo p {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 0.65rem;
-    color: var(--muted);
-    margin-top: 1px;
-  }
-
-  .header-right {
-    margin-left: auto;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
+  .header-right { margin-left: auto; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
 
   .tag {
     font-family: 'JetBrains Mono', monospace;
-    font-size: 0.65rem;
-    padding: 3px 8px;
-    border-radius: 4px;
-    border: 1px solid var(--border2);
-    color: var(--muted);
-    background: var(--panel);
+    font-size: 0.62rem; padding: 3px 8px;
+    border-radius: 4px; border: 1px solid var(--border2);
+    color: var(--muted); background: var(--panel);
   }
 
   .status-dot {
-    display: flex;
-    align-items: center;
-    gap: 6px;
+    display: flex; align-items: center; gap: 6px;
     font-family: 'JetBrains Mono', monospace;
-    font-size: 0.7rem;
-    padding: 4px 10px;
-    border-radius: 4px;
-    border: 1px solid var(--border2);
+    font-size: 0.68rem; padding: 4px 10px;
+    border-radius: 4px; border: 1px solid var(--border2);
     background: var(--panel);
   }
 
-  .dot {
-    width: 7px;
-    height: 7px;
-    border-radius: 50%;
-    background: var(--muted);
-  }
-
+  .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--muted); }
   .dot.online { background: var(--accent); box-shadow: 0 0 6px var(--accent); animation: pulse 2s infinite; }
   .dot.offline { background: var(--danger); }
   .dot.checking { background: var(--warn); animation: blink 1s infinite; }
@@ -141,112 +96,183 @@
   @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.5} }
   @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.3} }
 
-  /* ── LAYOUT ── */
   .layout {
     display: grid;
     grid-template-columns: 300px 1fr 280px;
-    gap: 1px;
-    background: var(--border);
+    gap: 1px; background: var(--border);
     min-height: calc(100vh - 61px);
   }
 
-  .col {
-    background: var(--bg);
-    display: flex;
-    flex-direction: column;
-  }
-
-  /* ── PANEL ── */
-  .panel {
-    border-bottom: 1px solid var(--border);
-  }
+  .col { background: var(--bg); display: flex; flex-direction: column; }
+  .panel { border-bottom: 1px solid var(--border); }
 
   .panel-title {
     font-family: 'JetBrains Mono', monospace;
-    font-size: 0.65rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    color: var(--muted);
-    padding: 10px 16px;
+    font-size: 0.62rem; font-weight: 600;
+    text-transform: uppercase; letter-spacing: 0.1em;
+    color: var(--muted); padding: 10px 16px;
     border-bottom: 1px solid var(--border);
-    display: flex;
-    align-items: center;
-    gap: 8px;
+    display: flex; align-items: center; gap: 8px;
   }
 
-  .panel-title .dot-accent {
-    width: 5px; height: 5px;
-    border-radius: 50%;
-    background: var(--accent2);
-  }
-
+  .dot-accent { width: 5px; height: 5px; border-radius: 50%; background: var(--accent2); }
   .panel-body { padding: 14px 16px; }
+
+  /* ── DEMO BANNER ── */
+  .demo-banner {
+    background: linear-gradient(135deg, rgba(57,211,83,0.06), rgba(88,166,255,0.04));
+    border: 1px solid rgba(57,211,83,0.25);
+    border-radius: 8px; padding: 14px 16px;
+    margin: 14px 16px 0;
+  }
+
+  .demo-title {
+    font-size: 0.85rem; font-weight: 700; color: var(--accent);
+    margin-bottom: 5px; display: flex; align-items: center; gap: 6px;
+  }
+
+  .demo-desc {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.63rem; color: var(--muted);
+    margin-bottom: 10px; line-height: 1.6;
+  }
+
+  .demo-steps { display: flex; gap: 4px; flex-wrap: wrap; margin-bottom: 12px; }
+
+  .demo-step {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.58rem; padding: 2px 6px;
+    border-radius: 3px; background: var(--panel);
+    border: 1px solid var(--border2); color: var(--muted);
+    transition: all 0.3s;
+  }
+
+  .demo-step.active {
+    background: rgba(57,211,83,0.15);
+    border-color: var(--accent); color: var(--accent);
+    box-shadow: 0 0 8px var(--glow);
+  }
+
+  .demo-step.done {
+    background: rgba(57,211,83,0.05);
+    border-color: rgba(57,211,83,0.2);
+    color: rgba(57,211,83,0.5);
+  }
+
+  .btn-demo {
+    width: 100%; border: none; border-radius: 6px;
+    padding: 10px 16px;
+    font-family: 'Syne', sans-serif;
+    font-size: 0.85rem; font-weight: 700;
+    cursor: pointer; transition: all 0.15s;
+    background: linear-gradient(135deg, #1a4a2a, #0f3319);
+    border: 1px solid var(--accent); color: var(--accent);
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+    margin-bottom: 10px;
+  }
+
+  .btn-demo:hover:not(:disabled) {
+    background: linear-gradient(135deg, #235c35, #1a4a2a);
+    box-shadow: 0 0 20px var(--glow);
+  }
+
+  .btn-demo:disabled { opacity: 0.4; cursor: not-allowed; }
+
+  .btn-demo.running {
+    background: linear-gradient(135deg, #4a1a0f, #380d08);
+    border-color: var(--danger); color: var(--danger);
+  }
+
+  .speed-row {
+    display: flex; align-items: center; gap: 8px;
+  }
+
+  .speed-row label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.58rem; color: var(--muted);
+    white-space: nowrap; margin: 0;
+  }
+
+  input[type=range] {
+    flex: 1; accent-color: var(--accent);
+    background: transparent; border: none; padding: 0;
+  }
+
+  .speed-val {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.6rem; color: var(--accent2);
+    min-width: 30px; text-align: right;
+  }
+
+  /* ── THINKING BAR ── */
+  .thinking-bar {
+    display: none; align-items: center; gap: 8px;
+    padding: 8px 16px;
+    background: rgba(88,166,255,0.04);
+    border-bottom: 1px solid var(--border);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.63rem; color: var(--accent2);
+  }
+
+  .thinking-bar.active { display: flex; }
+
+  .thinking-dots span {
+    display: inline-block; width: 4px; height: 4px;
+    border-radius: 50%; background: var(--accent2);
+    margin: 0 1px; animation: thinkBounce 1.2s infinite;
+  }
+
+  .thinking-dots span:nth-child(2) { animation-delay: 0.2s; }
+  .thinking-dots span:nth-child(3) { animation-delay: 0.4s; }
+
+  @keyframes thinkBounce {
+    0%,80%,100%{ transform: scale(0.8); opacity: 0.4; }
+    40%{ transform: scale(1.2); opacity: 1; }
+  }
 
   /* ── CONTROLS ── */
   .field { margin-bottom: 10px; }
 
   label {
     font-family: 'JetBrains Mono', monospace;
-    font-size: 0.62rem;
-    color: var(--muted);
-    display: block;
-    margin-bottom: 5px;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
+    font-size: 0.6rem; color: var(--muted);
+    display: block; margin-bottom: 5px;
+    text-transform: uppercase; letter-spacing: 0.08em;
   }
 
   select, input[type=number], input[type=text] {
-    width: 100%;
-    background: var(--panel);
-    border: 1px solid var(--border2);
-    border-radius: 5px;
-    padding: 7px 10px;
-    color: var(--text);
+    width: 100%; background: var(--panel);
+    border: 1px solid var(--border2); border-radius: 5px;
+    padding: 7px 10px; color: var(--text);
     font-family: 'JetBrains Mono', monospace;
-    font-size: 0.78rem;
-    outline: none;
+    font-size: 0.78rem; outline: none;
     transition: border-color 0.15s;
   }
 
   select:focus, input:focus { border-color: var(--accent2); }
 
   textarea {
-    width: 100%;
-    background: var(--panel);
-    border: 1px solid var(--border2);
-    border-radius: 5px;
-    padding: 8px 10px;
-    color: var(--accent);
+    width: 100%; background: var(--panel);
+    border: 1px solid var(--border2); border-radius: 5px;
+    padding: 8px 10px; color: var(--accent);
     font-family: 'JetBrains Mono', monospace;
-    font-size: 0.75rem;
-    resize: vertical;
-    outline: none;
-    min-height: 70px;
-    transition: border-color 0.15s;
+    font-size: 0.75rem; resize: vertical; outline: none;
+    min-height: 70px; transition: border-color 0.15s;
   }
 
   textarea:focus { border-color: var(--accent); }
 
-  /* ── BUTTONS ── */
   .btn {
-    width: 100%;
-    border: none;
-    border-radius: 5px;
+    width: 100%; border: none; border-radius: 5px;
     padding: 9px 16px;
     font-family: 'Syne', sans-serif;
-    font-size: 0.82rem;
-    font-weight: 700;
-    cursor: pointer;
-    transition: all 0.15s;
-    letter-spacing: 0.02em;
+    font-size: 0.82rem; font-weight: 700;
+    cursor: pointer; transition: all 0.15s;
   }
 
   .btn-green {
     background: linear-gradient(135deg, #1a4a2a, #0f3319);
-    border: 1px solid var(--accent);
-    color: var(--accent);
-    box-shadow: 0 0 0 0 var(--glow);
+    border: 1px solid var(--accent); color: var(--accent);
   }
 
   .btn-green:hover:not(:disabled) {
@@ -256,8 +282,7 @@
 
   .btn-blue {
     background: linear-gradient(135deg, #1a2f4a, #0f2038);
-    border: 1px solid var(--accent2);
-    color: var(--accent2);
+    border: 1px solid var(--accent2); color: var(--accent2);
   }
 
   .btn-blue:hover:not(:disabled) {
@@ -268,63 +293,48 @@
   .btn:disabled { opacity: 0.35; cursor: not-allowed; }
 
   /* ── TOOL CHIPS ── */
-  .tool-chips {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 5px;
-    margin-bottom: 12px;
-  }
+  .tool-chips { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 12px; }
 
   .chip {
     font-family: 'JetBrains Mono', monospace;
-    font-size: 0.65rem;
-    padding: 4px 8px;
-    border-radius: 4px;
-    background: var(--panel);
-    border: 1px solid var(--border2);
-    color: var(--text);
-    cursor: pointer;
-    transition: all 0.12s;
-    white-space: nowrap;
+    font-size: 0.62rem; padding: 4px 8px;
+    border-radius: 4px; background: var(--panel);
+    border: 1px solid var(--border2); color: var(--text);
+    cursor: pointer; transition: all 0.12s; white-space: nowrap;
   }
 
   .chip:hover { background: var(--border2); border-color: var(--accent2); color: var(--accent2); }
   .chip.drift-chip { border-color: var(--drift); color: var(--drift); background: rgba(232,131,58,0.08); }
   .chip.drift-chip:hover { background: rgba(232,131,58,0.18); }
-  .chip.finish-chip { border-color: var(--muted); }
+  .chip.active-chip {
+    border-color: var(--accent); color: var(--accent);
+    background: rgba(57,211,83,0.12);
+    animation: chipPulse 1s infinite;
+  }
+
+  @keyframes chipPulse {
+    0%,100%{box-shadow:0 0 0 0 var(--glow)}
+    50%{box-shadow:0 0 10px var(--glow)}
+  }
 
   /* ── TASKS ── */
   .task-item {
-    padding: 10px 12px;
-    border-radius: 6px;
-    border: 1px solid var(--border2);
-    background: var(--panel);
-    margin-bottom: 6px;
-    transition: all 0.2s;
+    padding: 10px 12px; border-radius: 6px;
+    border: 1px solid var(--border2); background: var(--panel);
+    margin-bottom: 6px; transition: all 0.3s;
   }
 
   .task-item.done {
     border-color: rgba(57,211,83,0.3);
-    background: rgba(57,211,83,0.04);
-    opacity: 0.65;
+    background: rgba(57,211,83,0.04); opacity: 0.65;
   }
 
-  .task-desc {
-    font-size: 0.82rem;
-    color: var(--text);
-    line-height: 1.4;
-  }
-
-  .task-done .task-desc { text-decoration: line-through; }
+  .task-desc { font-size: 0.82rem; color: var(--text); line-height: 1.4; }
 
   .task-meta {
     font-family: 'JetBrains Mono', monospace;
-    font-size: 0.62rem;
-    color: var(--muted);
-    margin-top: 4px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
+    font-size: 0.6rem; color: var(--muted); margin-top: 4px;
+    display: flex; align-items: center; gap: 8px;
   }
 
   .task-status-done { color: var(--accent); }
@@ -334,10 +344,8 @@
     display: none;
     background: rgba(232,131,58,0.1);
     border: 1px solid var(--drift);
-    border-radius: 6px;
-    padding: 10px 12px;
-    margin-bottom: 12px;
-    font-size: 0.8rem;
+    border-radius: 6px; padding: 10px 12px;
+    margin-bottom: 12px; font-size: 0.8rem;
     color: var(--drift);
     animation: driftPulse 2s infinite;
   }
@@ -345,32 +353,22 @@
   .drift-banner.active { display: flex; align-items: center; gap: 8px; }
 
   @keyframes driftPulse {
-    0%,100% { box-shadow: 0 0 0 0 rgba(232,131,58,0); }
-    50% { box-shadow: 0 0 10px rgba(232,131,58,0.25); }
+    0%,100%{box-shadow:0 0 0 0 rgba(232,131,58,0)}
+    50%{box-shadow:0 0 10px rgba(232,131,58,0.25)}
   }
 
   /* ── STATS ── */
-  .stat-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 6px;
-    margin-bottom: 12px;
-  }
+  .stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-bottom: 12px; }
 
   .stat {
-    background: var(--panel);
-    border: 1px solid var(--border2);
-    border-radius: 6px;
-    padding: 10px;
-    text-align: center;
+    background: var(--panel); border: 1px solid var(--border2);
+    border-radius: 6px; padding: 10px; text-align: center;
   }
 
   .stat-val {
     font-family: 'JetBrains Mono', monospace;
-    font-size: 1.3rem;
-    font-weight: 700;
-    color: var(--accent);
-    line-height: 1;
+    font-size: 1.3rem; font-weight: 700;
+    color: var(--accent); line-height: 1;
   }
 
   .stat-val.blue { color: var(--accent2); }
@@ -378,149 +376,80 @@
 
   .stat-label {
     font-family: 'JetBrains Mono', monospace;
-    font-size: 0.58rem;
-    color: var(--muted);
-    margin-top: 4px;
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
+    font-size: 0.56rem; color: var(--muted); margin-top: 4px;
+    text-transform: uppercase; letter-spacing: 0.06em;
   }
 
-  /* ── STEP BAR ── */
   .step-info {
     font-family: 'JetBrains Mono', monospace;
-    font-size: 0.65rem;
-    color: var(--muted);
-    margin-bottom: 5px;
-    display: flex;
-    justify-content: space-between;
+    font-size: 0.62rem; color: var(--muted); margin-bottom: 5px;
+    display: flex; justify-content: space-between;
   }
 
-  .step-track {
-    height: 3px;
-    background: var(--border2);
-    border-radius: 2px;
-    overflow: hidden;
-  }
-
-  .step-fill {
-    height: 100%;
-    background: linear-gradient(90deg, var(--accent), var(--warn));
-    border-radius: 2px;
-    transition: width 0.4s ease;
-    width: 0%;
-  }
+  .step-track { height: 3px; background: var(--border2); border-radius: 2px; overflow: hidden; }
+  .step-fill { height: 100%; background: linear-gradient(90deg, var(--accent), var(--warn)); border-radius: 2px; transition: width 0.4s ease; width: 0%; }
 
   /* ── LOG ── */
   .log-wrap {
-    flex: 1;
-    overflow-y: auto;
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 0.72rem;
-    scrollbar-width: thin;
-    scrollbar-color: var(--border2) transparent;
+    flex: 1; overflow-y: auto;
+    font-family: 'JetBrains Mono', monospace; font-size: 0.72rem;
+    scrollbar-width: thin; scrollbar-color: var(--border2) transparent;
   }
 
-  .log-entry {
-    padding: 10px 16px;
-    border-bottom: 1px solid var(--border);
-    animation: slideIn 0.15s ease;
-  }
+  .log-entry { padding: 10px 16px; border-bottom: 1px solid var(--border); animation: slideIn 0.15s ease; }
 
-  @keyframes slideIn {
-    from { opacity: 0; transform: translateY(-4px); }
-    to   { opacity: 1; transform: translateY(0); }
-  }
+  @keyframes slideIn { from{opacity:0;transform:translateY(-4px)} to{opacity:1;transform:translateY(0)} }
 
-  .log-top {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    margin-bottom: 4px;
-  }
-
+  .log-top { display: flex; align-items: center; gap: 8px; margin-bottom: 4px; }
   .log-tool { color: var(--accent2); font-weight: 600; }
   .log-tool.system-tool { color: var(--muted); font-style: italic; }
   .log-tool.error-tool { color: var(--danger); }
+  .log-tool.agent-tool { color: var(--accent); }
 
-  .reward-badge {
-    font-size: 0.65rem;
-    padding: 1px 6px;
-    border-radius: 3px;
-    font-weight: 700;
+  .agent-badge {
+    font-size: 0.56rem; padding: 1px 5px; border-radius: 3px;
+    background: rgba(57,211,83,0.12);
+    border: 1px solid rgba(57,211,83,0.3);
+    color: var(--accent); font-weight: 700;
   }
 
+  .reward-badge { font-size: 0.62rem; padding: 1px 6px; border-radius: 3px; font-weight: 700; }
   .r-pos { background: rgba(57,211,83,0.15); color: var(--accent); border: 1px solid rgba(57,211,83,0.3); }
   .r-neg { background: rgba(248,81,73,0.15); color: var(--danger); border: 1px solid rgba(248,81,73,0.3); }
   .r-zero { background: var(--panel); color: var(--muted); border: 1px solid var(--border2); }
 
-  .log-step { margin-left: auto; color: var(--border2); font-size: 0.6rem; }
+  .log-step { margin-left: auto; color: var(--border2); font-size: 0.58rem; }
+  .log-result { color: var(--muted); font-size: 0.65rem; word-break: break-all; line-height: 1.5; max-height: 60px; overflow: hidden; }
 
-  .log-result {
-    color: var(--muted);
-    font-size: 0.67rem;
-    word-break: break-all;
-    line-height: 1.5;
-    max-height: 60px;
-    overflow: hidden;
-  }
+  .action-row { display: flex; gap: 6px; margin-top: 8px; }
+  .action-row input { flex: 1; }
+  .action-row .btn { width: auto; white-space: nowrap; padding: 7px 14px; }
 
-  /* ── ACTION INPUT ROW ── */
-  .action-row {
-    display: flex;
-    gap: 6px;
-    margin-top: 8px;
-  }
-
-  .action-row input {
-    flex: 1;
-  }
-
-  .action-row .btn {
-    width: auto;
-    white-space: nowrap;
-    padding: 7px 14px;
-  }
-
-  /* ── EMPTY STATE ── */
-  .empty {
-    text-align: center;
-    padding: 30px 16px;
-    color: var(--border2);
-  }
-
+  .empty { text-align: center; padding: 30px 16px; color: var(--border2); }
   .empty-icon { font-size: 2rem; margin-bottom: 8px; }
-  .empty-text { font-size: 0.75rem; font-family: 'JetBrains Mono', monospace; }
+  .empty-text { font-size: 0.72rem; font-family: 'JetBrains Mono', monospace; }
 
-  /* ── EPISODE DONE BANNER ── */
   .done-banner {
     display: none;
     background: rgba(57,211,83,0.08);
     border: 1px solid rgba(57,211,83,0.4);
-    border-radius: 6px;
-    padding: 12px 16px;
-    margin: 12px 16px;
-    text-align: center;
-    font-size: 0.85rem;
-    color: var(--accent);
-    font-weight: 700;
+    border-radius: 6px; padding: 12px 16px;
+    margin: 12px 16px; text-align: center;
+    font-size: 0.85rem; color: var(--accent); font-weight: 700;
   }
 
-  .done-banner.active { display: block; }
+  .done-banner.active { display: block; animation: slideIn 0.3s ease; }
 
-  /* ── SCROLLBAR ── */
   ::-webkit-scrollbar { width: 4px; }
   ::-webkit-scrollbar-track { background: transparent; }
   ::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 2px; }
 
-  @media (max-width: 900px) {
-    .layout { grid-template-columns: 1fr; }
-  }
+  @media (max-width: 900px) { .layout { grid-template-columns: 1fr; } }
 </style>
 </head>
 <body>
 <div class="wrap">
 
-<!-- HEADER -->
 <header>
   <div class="logo">
     <div class="logo-icon">🤖</div>
@@ -532,6 +461,7 @@
   <div class="header-right">
     <span class="tag">Theme #3.2</span>
     <span class="tag">World Modeling</span>
+    <span class="tag" style="color:var(--accent);border-color:rgba(57,211,83,0.3)">Llama 3.2 3B · GRPO</span>
     <div class="status-dot">
       <div class="dot checking" id="dot"></div>
       <span id="status-text">checking...</span>
@@ -539,15 +469,34 @@
   </div>
 </header>
 
-<!-- LAYOUT -->
 <div class="layout">
 
-  <!-- COL 1: Setup + Tasks -->
+  <!-- COL 1 -->
   <div class="col">
 
-    <!-- Episode Setup -->
-    <div class="panel">
-      <div class="panel-title"><div class="dot-accent"></div>Episode Setup</div>
+    <!-- Demo Banner -->
+    <div class="demo-banner">
+      <div class="demo-title">🤖 AI Agent Demo</div>
+      <div class="demo-desc">
+        Watch the trained AdaptAssist model autonomously complete tasks,
+        detect schema drift, and adapt its tool calls in real time.
+      </div>
+      <div class="demo-steps" id="demo-steps"></div>
+      <button class="btn-demo" id="demo-btn" onclick="toggleDemo()">
+        <span id="demo-btn-icon">▶</span>
+        <span id="demo-btn-text">Run AI Agent Demo</span>
+      </button>
+      <div class="speed-row">
+        <label>Speed</label>
+        <input type="range" id="speed-slider" min="400" max="3000" value="1500" step="100"
+               oninput="updateSpeed(this.value)">
+        <span class="speed-val" id="speed-val">1.5s</span>
+      </div>
+    </div>
+
+    <!-- Setup -->
+    <div class="panel" style="margin-top:14px">
+      <div class="panel-title"><div class="dot-accent"></div>Manual Setup</div>
       <div class="panel-body">
         <div class="field">
           <label>Difficulty</label>
@@ -561,7 +510,7 @@
           <label>Seed (optional)</label>
           <input type="number" id="seed" placeholder="random" min="0" max="9999">
         </div>
-        <button class="btn btn-green" id="reset-btn" onclick="resetEpisode()">▶ Start Episode</button>
+        <button class="btn btn-green" id="reset-btn" onclick="resetEpisode()">▶ Start Manual Episode</button>
       </div>
     </div>
 
@@ -570,7 +519,7 @@
       <div class="panel-title"><div class="dot-accent"></div>Tasks</div>
       <div class="panel-body">
         <div class="drift-banner" id="drift-banner">
-          ⚠️ Schema drift detected — call <code style="background:rgba(232,131,58,0.2);padding:1px 4px;border-radius:3px">detect_schema_change</code>
+          ⚠️ Schema drift — call <code style="background:rgba(232,131,58,0.2);padding:1px 4px;border-radius:3px">detect_schema_change</code>
         </div>
         <div id="task-list">
           <div class="empty"><div class="empty-icon">📭</div><div class="empty-text">Start an episode</div></div>
@@ -583,44 +532,34 @@
       <div class="panel-title"><div class="dot-accent"></div>Stats</div>
       <div class="panel-body">
         <div class="stat-grid">
-          <div class="stat">
-            <div class="stat-val" id="s-tasks">—</div>
-            <div class="stat-label">Tasks Done</div>
-          </div>
-          <div class="stat">
-            <div class="stat-val blue" id="s-reward">—</div>
-            <div class="stat-label">Total Reward</div>
-          </div>
-          <div class="stat">
-            <div class="stat-val orange" id="s-drifts">—</div>
-            <div class="stat-label">Drifts Found</div>
-          </div>
-          <div class="stat">
-            <div class="stat-val" id="s-steps">0</div>
-            <div class="stat-label">Steps</div>
-          </div>
+          <div class="stat"><div class="stat-val" id="s-tasks">—</div><div class="stat-label">Tasks Done</div></div>
+          <div class="stat"><div class="stat-val blue" id="s-reward">—</div><div class="stat-label">Total Reward</div></div>
+          <div class="stat"><div class="stat-val orange" id="s-drifts">—</div><div class="stat-label">Drifts Found</div></div>
+          <div class="stat"><div class="stat-val" id="s-steps">0</div><div class="stat-label">Steps</div></div>
         </div>
         <div class="step-info">
           <span id="step-label">Step 0 / 30</span>
           <span id="step-pct">0%</span>
         </div>
-        <div class="step-track">
-          <div class="step-fill" id="step-fill"></div>
-        </div>
+        <div class="step-track"><div class="step-fill" id="step-fill"></div></div>
       </div>
     </div>
 
   </div>
 
-  <!-- COL 2: Action + Log -->
+  <!-- COL 2 -->
   <div class="col">
 
-    <!-- Action -->
+    <div class="thinking-bar" id="thinking-bar">
+      <div class="thinking-dots"><span></span><span></span><span></span></div>
+      <span id="thinking-text">Agent is deciding next action...</span>
+    </div>
+
     <div class="panel">
       <div class="panel-title"><div class="dot-accent"></div>Take Action</div>
       <div class="panel-body">
         <div class="tool-chips" id="tool-chips">
-          <div class="empty-text" style="color:var(--border2);font-family:'JetBrains Mono',monospace;font-size:0.65rem">Start an episode to see tools</div>
+          <div class="empty-text" style="color:var(--border2);font-family:'JetBrains Mono',monospace;font-size:0.62rem">Start an episode to see tools</div>
         </div>
         <div class="field">
           <label>Params (JSON)</label>
@@ -633,13 +572,11 @@
       </div>
     </div>
 
-    <!-- Done Banner -->
     <div class="done-banner" id="done-banner">🏁 Episode Complete</div>
 
-    <!-- Log -->
     <div class="panel-title" style="padding:10px 16px;border-bottom:1px solid var(--border)">
       <div class="dot-accent"></div>Episode Log
-      <span style="margin-left:auto;font-size:0.62rem;color:var(--muted);cursor:pointer" onclick="clearLog()">clear</span>
+      <span style="margin-left:auto;font-size:0.6rem;color:var(--muted);cursor:pointer" onclick="clearLog()">clear</span>
     </div>
     <div class="log-wrap" id="log">
       <div class="empty"><div class="empty-icon">🔍</div><div class="empty-text">Actions will appear here</div></div>
@@ -647,73 +584,74 @@
 
   </div>
 
-  <!-- COL 3: Reference -->
+  <!-- COL 3 -->
   <div class="col">
+
     <div class="panel">
-      <div class="panel-title"><div class="dot-accent"></div>Available Tools</div>
-      <div class="panel-body" style="font-family:'JetBrains Mono',monospace;font-size:0.68rem;color:var(--muted)">
-        <div style="margin-bottom:10px;color:var(--accent2);font-size:0.62rem;text-transform:uppercase;letter-spacing:0.08em">Calendar</div>
-        <div style="margin-bottom:5px">📅 <span style="color:var(--text)">read_calendar</span></div>
-        <div style="margin-bottom:5px">➕ <span style="color:var(--text)">create_event</span></div>
-        <div style="margin-bottom:14px">🗑️ <span style="color:var(--text)">delete_event</span></div>
-        <div style="margin-bottom:10px;color:var(--accent2);font-size:0.62rem;text-transform:uppercase;letter-spacing:0.08em">Email</div>
-        <div style="margin-bottom:5px">📬 <span style="color:var(--text)">get_inbox</span></div>
-        <div style="margin-bottom:14px">✉️ <span style="color:var(--text)">send_reply</span></div>
-        <div style="margin-bottom:10px;color:var(--accent2);font-size:0.62rem;text-transform:uppercase;letter-spacing:0.08em">Restaurant</div>
-        <div style="margin-bottom:5px">🍽️ <span style="color:var(--text)">search_restaurants</span></div>
-        <div style="margin-bottom:14px">📋 <span style="color:var(--text)">book_restaurant</span></div>
-        <div style="margin-bottom:10px;color:var(--accent2);font-size:0.62rem;text-transform:uppercase;letter-spacing:0.08em">System</div>
-        <div style="margin-bottom:5px">👤 <span style="color:var(--text)">get_user_prefs</span></div>
-        <div style="margin-bottom:5px;color:var(--drift)">⚠️ <span style="color:var(--drift)">detect_schema_change</span></div>
+      <div class="panel-title"><div class="dot-accent"></div>Agent Strategy</div>
+      <div class="panel-body" style="font-family:'JetBrains Mono',monospace;font-size:0.67rem;color:var(--muted);line-height:1.9">
+        <div style="color:var(--accent2);margin-bottom:8px;font-size:0.58rem;text-transform:uppercase;letter-spacing:0.08em">Demo Sequence</div>
+        1. Get user preferences<br>
+        2. Read calendar<br>
+        3. Check inbox<br>
+        4. <span style="color:var(--drift)">⚠️ Detect schema drift</span><br>
+        5. Reply to emails<br>
+        6. Search restaurants<br>
+        7. Book reservation<br>
+        8. Create calendar event<br>
+        9. <span style="color:var(--accent)">✅ Finish episode</span>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-title"><div class="dot-accent"></div>Tools</div>
+      <div class="panel-body" style="font-family:'JetBrains Mono',monospace;font-size:0.65rem;color:var(--muted)">
+        <div style="margin-bottom:6px;color:var(--accent2);font-size:0.58rem;text-transform:uppercase;letter-spacing:0.08em">Calendar</div>
+        <div style="margin-bottom:3px">📅 <span style="color:var(--text)">read_calendar</span></div>
+        <div style="margin-bottom:3px">➕ <span style="color:var(--text)">create_event</span></div>
+        <div style="margin-bottom:10px">🗑️ <span style="color:var(--text)">delete_event</span></div>
+        <div style="margin-bottom:6px;color:var(--accent2);font-size:0.58rem;text-transform:uppercase;letter-spacing:0.08em">Email</div>
+        <div style="margin-bottom:3px">📬 <span style="color:var(--text)">get_inbox</span></div>
+        <div style="margin-bottom:10px">✉️ <span style="color:var(--text)">send_reply</span></div>
+        <div style="margin-bottom:6px;color:var(--accent2);font-size:0.58rem;text-transform:uppercase;letter-spacing:0.08em">Restaurant</div>
+        <div style="margin-bottom:3px">🍽️ <span style="color:var(--text)">search_restaurants</span></div>
+        <div style="margin-bottom:10px">📋 <span style="color:var(--text)">book_restaurant</span></div>
+        <div style="margin-bottom:6px;color:var(--accent2);font-size:0.58rem;text-transform:uppercase;letter-spacing:0.08em">System</div>
+        <div style="margin-bottom:3px">👤 <span style="color:var(--text)">get_user_prefs</span></div>
+        <div style="margin-bottom:3px;color:var(--drift)">⚠️ detect_schema_change</div>
         <div>🏁 <span style="color:var(--text)">finish</span></div>
       </div>
     </div>
 
     <div class="panel">
       <div class="panel-title"><div class="dot-accent"></div>Reward Guide</div>
-      <div class="panel-body" style="font-family:'JetBrains Mono',monospace;font-size:0.68rem">
-        <div style="display:flex;justify-content:space-between;margin-bottom:7px">
-          <span style="color:var(--muted)">Task completed</span>
-          <span style="color:var(--accent)">+0.40</span>
-        </div>
-        <div style="display:flex;justify-content:space-between;margin-bottom:7px">
-          <span style="color:var(--muted)">Drift detected</span>
-          <span style="color:var(--accent)">+0.30</span>
-        </div>
-        <div style="display:flex;justify-content:space-between;margin-bottom:7px">
-          <span style="color:var(--muted)">Pref aligned</span>
-          <span style="color:var(--accent)">+0.20</span>
-        </div>
-        <div style="display:flex;justify-content:space-between;margin-bottom:7px">
-          <span style="color:var(--muted)">Efficient action</span>
-          <span style="color:var(--accent)">+0.10</span>
-        </div>
-        <div style="height:1px;background:var(--border);margin:10px 0"></div>
-        <div style="display:flex;justify-content:space-between;margin-bottom:7px">
-          <span style="color:var(--muted)">Wrong tool</span>
-          <span style="color:var(--danger)">−0.10</span>
-        </div>
-        <div style="display:flex;justify-content:space-between">
-          <span style="color:var(--muted)">Repeat call</span>
-          <span style="color:var(--danger)">−0.05</span>
-        </div>
+      <div class="panel-body" style="font-family:'JetBrains Mono',monospace;font-size:0.65rem">
+        <div style="display:flex;justify-content:space-between;margin-bottom:5px"><span style="color:var(--muted)">Task completed</span><span style="color:var(--accent)">+0.40</span></div>
+        <div style="display:flex;justify-content:space-between;margin-bottom:5px"><span style="color:var(--muted)">Drift detected</span><span style="color:var(--accent)">+0.30</span></div>
+        <div style="display:flex;justify-content:space-between;margin-bottom:5px"><span style="color:var(--muted)">Pref aligned</span><span style="color:var(--accent)">+0.20</span></div>
+        <div style="display:flex;justify-content:space-between;margin-bottom:5px"><span style="color:var(--muted)">Efficient action</span><span style="color:var(--accent)">+0.10</span></div>
+        <div style="height:1px;background:var(--border);margin:8px 0"></div>
+        <div style="display:flex;justify-content:space-between;margin-bottom:5px"><span style="color:var(--muted)">Wrong tool</span><span style="color:var(--danger)">−0.10</span></div>
+        <div style="display:flex;justify-content:space-between"><span style="color:var(--muted)">Repeat call</span><span style="color:var(--danger)">−0.05</span></div>
       </div>
     </div>
 
     <div class="panel">
-      <div class="panel-title"><div class="dot-accent"></div>How It Works</div>
-      <div class="panel-body" style="font-family:'JetBrains Mono',monospace;font-size:0.67rem;color:var(--muted);line-height:1.7">
-        1. Start episode → get tasks<br>
-        2. Call tools to complete tasks<br>
-        3. Watch for drift warnings ⚠️<br>
-        4. Call detect_schema_change<br>
-        5. Adapt params → finish
+      <div class="panel-title"><div class="dot-accent"></div>Model Info</div>
+      <div class="panel-body" style="font-family:'JetBrains Mono',monospace;font-size:0.65rem;color:var(--muted);line-height:1.8">
+        <div>Base: <span style="color:var(--text)">Llama 3.2 3B</span></div>
+        <div>Training: <span style="color:var(--text)">SFT → GRPO</span></div>
+        <div>SFT samples: <span style="color:var(--text)">3,550</span></div>
+        <div>GRPO steps: <span style="color:var(--text)">69</span></div>
+        <div>Format reward: <span style="color:var(--accent)">1.000</span></div>
+        <div>Env reward: <span style="color:var(--accent)">0.050</span></div>
       </div>
     </div>
+
   </div>
 
-</div><!-- end layout -->
-</div><!-- end wrap -->
+</div>
+</div>
 
 <script>
 const API = '';
@@ -721,143 +659,251 @@ let episodeActive = false;
 let totalReward = 0;
 let stepCount = 0;
 let maxSteps = 30;
+let demoRunning = false;
+let demoAbort = false;
+let demoSpeed = 1500;
 
-const TOOLS = [
-  { name: 'read_calendar',       params: { date: '2026-05-01' } },
-  { name: 'create_event',        params: { title: 'Meeting', date: '2026-05-02', begins_at: '10:00', ends_at: '11:00' } },
-  { name: 'delete_event',        params: { event_id: 'evt_0' } },
-  { name: 'get_inbox',           params: {} },
-  { name: 'send_reply',          params: { email_id: 'eml_0', body: 'Understood, thanks.', tone: 'professional' } },
-  { name: 'search_restaurants',  params: { cuisine: 'Italian' } },
-  { name: 'book_restaurant',     params: { restaurant_id: 'rst_0', time_slot: '19:00' } },
-  { name: 'get_user_prefs',      params: {} },
-  { name: 'detect_schema_change',params: { module: 'calendar' }, type: 'drift' },
-  { name: 'finish',              params: {}, type: 'finish' },
+const DEMO_SEQUENCE = [
+  { tool: 'get_user_prefs',       params: {},                                                                                      thought: 'Getting user preferences first' },
+  { tool: 'read_calendar',        params: { date: '2026-05-01' },                                                                  thought: 'Checking calendar for today' },
+  { tool: 'get_inbox',            params: {},                                                                                      thought: 'Reading unread emails' },
+  { tool: 'detect_schema_change', params: { module: 'calendar' },                                                                  thought: '⚠️ Drift warning — checking schema changes' },
+  { tool: 'send_reply',           params: { email_id: 'eml_0', body: 'Confirmed, I will attend.', tone: 'professional' },         thought: 'Replying to urgent email' },
+  { tool: 'search_restaurants',   params: { cuisine: 'Italian', date: '2026-05-01', time_slot: '19:00' },                         thought: 'Finding Italian restaurants' },
+  { tool: 'book_restaurant',      params: { restaurant_id: 'rst_0', date: '2026-05-01', time_slot: '19:00', party_size: 2 },      thought: 'Booking the best option' },
+  { tool: 'create_event',         params: { title: 'Team Dinner', date: '2026-05-01', begins_at: '19:00', ends_at: '21:00', priority: 'medium' }, thought: 'Adding to calendar' },
+  { tool: 'finish',               params: {},                                                                                      thought: 'All tasks completed ✅' },
 ];
 
-// ── Health check ──────────────────────────────────────────────────
+function buildDemoSteps() {
+  const el = document.getElementById('demo-steps');
+  el.innerHTML = DEMO_SEQUENCE.map((s, i) =>
+    `<div class="demo-step" id="ds-${i}">${s.tool.replace(/_/g,' ')}</div>`
+  ).join('');
+}
+
+function updateDemoStep(idx) {
+  DEMO_SEQUENCE.forEach((_, i) => {
+    const el = document.getElementById(`ds-${i}`);
+    if (!el) return;
+    el.className = 'demo-step' + (i < idx ? ' done' : i === idx ? ' active' : '');
+  });
+}
+
+function updateSpeed(val) {
+  demoSpeed = parseInt(val);
+  document.getElementById('speed-val').textContent = (demoSpeed / 1000).toFixed(1) + 's';
+}
+
+async function toggleDemo() {
+  if (demoRunning) { demoAbort = true; return; }
+  await runDemoAgent();
+}
+
+async function runDemoAgent() {
+  demoRunning = true;
+  demoAbort = false;
+
+  const btn = document.getElementById('demo-btn');
+  btn.classList.add('running');
+  document.getElementById('demo-btn-icon').textContent = '■';
+  document.getElementById('demo-btn-text').textContent = 'Stop Demo';
+  document.getElementById('reset-btn').disabled = true;
+  document.getElementById('step-btn').disabled = true;
+
+  const difficulty = document.getElementById('difficulty').value;
+
+  try {
+    const r = await fetch(`${API}/reset`, {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ difficulty }),
+    });
+    const d = await r.json();
+    episodeActive = true; totalReward = 0; stepCount = 0;
+    maxSteps = d.observation?.max_steps || 30;
+    document.getElementById('log').innerHTML = '';
+    document.getElementById('done-banner').classList.remove('active');
+    renderTasks(d.observation?.tasks || []);
+    renderToolChips();
+    updateDriftBanner(d.observation?.drift_warning || false);
+    updateStats(0, 0, d.observation);
+    updateStepBar(0, maxSteps);
+    addLog('system', `🤖 AI Agent started · difficulty: ${difficulty}`, null, 0, true);
+  } catch(e) {
+    addLog('error', `Failed to start: ${e.message}`, null, 0, false);
+    resetDemoUI(); return;
+  }
+
+  for (let i = 0; i < DEMO_SEQUENCE.length; i++) {
+    if (demoAbort || !episodeActive) break;
+    const action = DEMO_SEQUENCE[i];
+    updateDemoStep(i);
+
+    // Show thinking
+    document.getElementById('thinking-bar').classList.add('active');
+    document.getElementById('thinking-text').textContent = `Agent thinking: "${action.thought}"`;
+
+    // Highlight chip
+    document.querySelectorAll('.chip').forEach(c => c.classList.remove('active-chip'));
+    document.querySelectorAll('.chip').forEach(c => {
+      if (c.textContent.trim() === action.tool) c.classList.add('active-chip');
+    });
+
+    document.getElementById('tool-input').value = action.tool;
+    document.getElementById('params-input').value = JSON.stringify(action.params, null, 2);
+
+    await sleep(demoSpeed * 0.55);
+    document.getElementById('thinking-bar').classList.remove('active');
+
+    try {
+      const r = await fetch(`${API}/step`, {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ tool: action.tool, params: action.params }),
+      });
+      const d = await r.json();
+      totalReward += d.reward || 0; stepCount++;
+      const resultStr = d.tool_result ? JSON.stringify(d.tool_result).substring(0, 300) : '(no result)';
+      addLog(action.tool, resultStr, d.reward, stepCount, true);
+      renderTasks(d.observation?.tasks || []);
+      updateDriftBanner(d.observation?.drift_warning || false);
+      updateStats(d.tasks_completed, d.total_tasks, d.observation);
+      updateStepBar(d.observation?.step || stepCount, d.observation?.max_steps || maxSteps);
+
+      if (d.done) {
+        episodeActive = false;
+        document.getElementById('done-banner').classList.add('active');
+        document.getElementById('done-banner').textContent =
+          `🏁 Agent completed episode · Total Reward: ${totalReward.toFixed(4)}`;
+        addLog('system', `🤖 Agent finished · total reward: ${totalReward.toFixed(4)}`, null, stepCount, true);
+        break;
+      }
+    } catch(e) {
+      addLog('error', `Step failed: ${e.message}`, null, stepCount, false);
+    }
+
+    await sleep(demoSpeed * 0.45);
+  }
+
+  updateDemoStep(DEMO_SEQUENCE.length);
+  document.querySelectorAll('.chip').forEach(c => c.classList.remove('active-chip'));
+  resetDemoUI();
+}
+
+function resetDemoUI() {
+  demoRunning = false;
+  const btn = document.getElementById('demo-btn');
+  btn.classList.remove('running');
+  document.getElementById('demo-btn-icon').textContent = '▶';
+  document.getElementById('demo-btn-text').textContent = 'Run AI Agent Demo';
+  document.getElementById('reset-btn').disabled = false;
+  document.getElementById('thinking-bar').classList.remove('active');
+  if (episodeActive) document.getElementById('step-btn').disabled = false;
+}
+
+function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
+
 async function checkHealth() {
   const dot = document.getElementById('dot');
   const txt = document.getElementById('status-text');
   try {
     const r = await fetch(`${API}/health`, { signal: AbortSignal.timeout(8000) });
     const d = await r.json();
-    if (d.status === 'ok') {
-      dot.className = 'dot online';
-      txt.textContent = 'online';
-    } else {
-      dot.className = 'dot offline';
-      txt.textContent = 'error';
-    }
-  } catch(e) {
-    dot.className = 'dot offline';
-    txt.textContent = 'offline';
-  }
+    if (d.status === 'ok') { dot.className = 'dot online'; txt.textContent = 'online'; }
+    else { dot.className = 'dot offline'; txt.textContent = 'error'; }
+  } catch(e) { dot.className = 'dot offline'; txt.textContent = 'offline'; }
 }
 
-// ── Reset ─────────────────────────────────────────────────────────
 async function resetEpisode() {
+  if (demoRunning) return;
   const difficulty = document.getElementById('difficulty').value;
-  const seedVal    = document.getElementById('seed').value;
-  const body       = { difficulty };
+  const seedVal = document.getElementById('seed').value;
+  const body = { difficulty };
   if (seedVal) body.seed = parseInt(seedVal);
 
   const btn = document.getElementById('reset-btn');
-  btn.disabled = true;
-  btn.textContent = '⟳ Starting...';
+  btn.disabled = true; btn.textContent = '⟳ Starting...';
 
   try {
     const r = await fetch(`${API}/reset`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(body),
-      signal: AbortSignal.timeout(15000)
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body), signal: AbortSignal.timeout(15000)
     });
-
     if (!r.ok) throw new Error(`Server error ${r.status}`);
     const d = await r.json();
-
-    episodeActive = true;
-    totalReward   = 0;
-    stepCount     = 0;
-    maxSteps      = d.observation?.max_steps || 30;
-
+    episodeActive = true; totalReward = 0; stepCount = 0;
+    maxSteps = d.observation?.max_steps || 30;
     document.getElementById('log').innerHTML = '';
     document.getElementById('done-banner').classList.remove('active');
     document.getElementById('step-btn').disabled = false;
-
     renderTasks(d.observation?.tasks || []);
     renderToolChips();
     updateDriftBanner(d.observation?.drift_warning || false);
     updateStats(0, 0, d.observation);
     updateStepBar(0, maxSteps);
-    addLog('system', `Episode started · difficulty: ${difficulty}`, null, stepCount);
-
+    updateDemoStep(-1);
+    addLog('system', `Episode started · difficulty: ${difficulty}`, null, stepCount, false);
   } catch(e) {
-    addLog('error', `Reset failed: ${e.message} — is the environment Space awake?`, null, stepCount);
+    addLog('error', `Reset failed: ${e.message}`, null, stepCount, false);
   }
-
-  btn.disabled = false;
-  btn.textContent = '▶ Start Episode';
+  btn.disabled = false; btn.textContent = '▶ Start Manual Episode';
 }
 
-// ── Step ──────────────────────────────────────────────────────────
 async function takeStep() {
-  if (!episodeActive) return;
+  if (!episodeActive || demoRunning) return;
   const tool = document.getElementById('tool-input').value.trim();
   if (!tool) { document.getElementById('tool-input').focus(); return; }
-
   let params = {};
-  try {
-    params = JSON.parse(document.getElementById('params-input').value || '{}');
-  } catch(e) {
-    addLog('error', 'Invalid JSON in params', null, stepCount);
-    return;
-  }
+  try { params = JSON.parse(document.getElementById('params-input').value || '{}'); }
+  catch(e) { addLog('error', 'Invalid JSON params', null, stepCount, false); return; }
 
   document.getElementById('step-btn').disabled = true;
-
   try {
     const r = await fetch(`${API}/step`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ tool, params }),
-      signal: AbortSignal.timeout(15000)
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ tool, params }), signal: AbortSignal.timeout(15000)
     });
-
     if (!r.ok) throw new Error(`Server error ${r.status}`);
     const d = await r.json();
-
-    totalReward += d.reward || 0;
-    stepCount++;
-
-    const resultStr = d.tool_result
-      ? JSON.stringify(d.tool_result).substring(0, 300)
-      : '(no result)';
-
-    addLog(tool, resultStr, d.reward, stepCount);
+    totalReward += d.reward || 0; stepCount++;
+    const resultStr = d.tool_result ? JSON.stringify(d.tool_result).substring(0, 300) : '(no result)';
+    addLog(tool, resultStr, d.reward, stepCount, false);
     renderTasks(d.observation?.tasks || []);
     updateDriftBanner(d.observation?.drift_warning || false);
     updateStats(d.tasks_completed, d.total_tasks, d.observation);
     updateStepBar(d.observation?.step || stepCount, d.observation?.max_steps || maxSteps);
-
     if (d.done) {
       episodeActive = false;
       document.getElementById('step-btn').disabled = true;
       document.getElementById('done-banner').classList.add('active');
-      document.getElementById('done-banner').textContent =
-        `🏁 Episode Complete · Final Reward: ${totalReward.toFixed(4)}`;
-      addLog('system', `Episode done · total reward: ${totalReward.toFixed(4)}`, null, stepCount);
+      document.getElementById('done-banner').textContent = `🏁 Episode Complete · Reward: ${totalReward.toFixed(4)}`;
     }
-
   } catch(e) {
-    addLog('error', `Step failed: ${e.message}`, null, stepCount);
+    addLog('error', `Step failed: ${e.message}`, null, stepCount, false);
   }
-
   if (episodeActive) document.getElementById('step-btn').disabled = false;
 }
 
-// ── Render helpers ────────────────────────────────────────────────
+const TOOLS = [
+  { name: 'read_calendar',        params: { date: '2026-05-01' } },
+  { name: 'create_event',         params: { title: 'Meeting', date: '2026-05-02', begins_at: '10:00', ends_at: '11:00' } },
+  { name: 'delete_event',         params: { event_id: 'evt_0' } },
+  { name: 'get_inbox',            params: {} },
+  { name: 'send_reply',           params: { email_id: 'eml_0', body: 'Understood, thanks.', tone: 'professional' } },
+  { name: 'search_restaurants',   params: { cuisine: 'Italian' } },
+  { name: 'book_restaurant',      params: { restaurant_id: 'rst_0', time_slot: '19:00' } },
+  { name: 'get_user_prefs',       params: {} },
+  { name: 'detect_schema_change', params: { module: 'calendar' }, type: 'drift' },
+  { name: 'finish',               params: {}, type: 'finish' },
+];
+
+function renderToolChips() {
+  const el = document.getElementById('tool-chips');
+  el.innerHTML = TOOLS.map(t => `
+    <div class="chip ${t.type === 'drift' ? 'drift-chip' : ''}"
+         onclick='setTool("${t.name}", ${JSON.stringify(t.params)})'>${t.name}</div>
+  `).join('');
+}
+
 function renderTasks(tasks) {
   const el = document.getElementById('task-list');
   if (!tasks.length) {
@@ -875,16 +921,6 @@ function renderTasks(tasks) {
   `).join('');
 }
 
-function renderToolChips() {
-  const el = document.getElementById('tool-chips');
-  el.innerHTML = TOOLS.map(t => `
-    <div class="chip ${t.type === 'drift' ? 'drift-chip' : t.type === 'finish' ? 'finish-chip' : ''}"
-         onclick='setTool("${t.name}", ${JSON.stringify(t.params)})'>
-      ${t.name}
-    </div>
-  `).join('');
-}
-
 function setTool(name, params) {
   document.getElementById('tool-input').value = name;
   document.getElementById('params-input').value = JSON.stringify(params, null, 2);
@@ -895,20 +931,15 @@ function updateDriftBanner(active) {
 }
 
 function updateStats(tasksCompleted, totalTasks, obs) {
-  // tasks
-  if (tasksCompleted !== undefined && totalTasks !== undefined) {
+  if (tasksCompleted !== undefined && totalTasks !== undefined)
     document.getElementById('s-tasks').textContent = `${tasksCompleted}/${totalTasks}`;
-  }
-  // reward
   document.getElementById('s-reward').textContent = totalReward.toFixed(3);
-  // drifts from observation
   if (obs) {
     const detected = obs.detected_drift_count ?? '—';
     const active   = obs.active_drift_count   ?? '—';
     document.getElementById('s-drifts').textContent =
       (detected !== '—' && active !== '—') ? `${detected}/${active}` : '—';
   }
-  // steps
   document.getElementById('s-steps').textContent = stepCount;
 }
 
@@ -916,10 +947,10 @@ function updateStepBar(step, max) {
   const pct = Math.min(100, Math.round((step / max) * 100));
   document.getElementById('step-fill').style.width = `${pct}%`;
   document.getElementById('step-label').textContent = `Step ${step} / ${max}`;
-  document.getElementById('step-pct').textContent   = `${pct}%`;
+  document.getElementById('step-pct').textContent = `${pct}%`;
 }
 
-function addLog(tool, resultStr, reward, step) {
+function addLog(tool, resultStr, reward, step, isAgent) {
   const log = document.getElementById('log');
   if (log.querySelector('.empty')) log.innerHTML = '';
 
@@ -930,13 +961,16 @@ function addLog(tool, resultStr, reward, step) {
     rewardHtml = `<span class="reward-badge ${cls}">${sign}${reward.toFixed(3)}</span>`;
   }
 
-  const toolCls = tool === 'system' ? 'system-tool' : tool === 'error' ? 'error-tool' : '';
+  const toolCls = tool === 'system' ? 'system-tool' : tool === 'error' ? 'error-tool' : isAgent ? 'agent-tool' : '';
+  const agentBadge = isAgent && tool !== 'system' && tool !== 'error'
+    ? '<span class="agent-badge">AI</span>' : '';
 
   const el = document.createElement('div');
   el.className = 'log-entry';
   el.innerHTML = `
     <div class="log-top">
       <span class="log-tool ${toolCls}">${tool}</span>
+      ${agentBadge}
       ${rewardHtml}
       <span class="log-step">step ${step}</span>
     </div>
@@ -950,8 +984,8 @@ function clearLog() {
     '<div class="empty"><div class="empty-icon">🔍</div><div class="empty-text">Log cleared</div></div>';
 }
 
-// Enter key on tool input triggers step
 document.addEventListener('DOMContentLoaded', () => {
+  buildDemoSteps();
   document.getElementById('tool-input').addEventListener('keydown', e => {
     if (e.key === 'Enter' && !document.getElementById('step-btn').disabled) takeStep();
   });
