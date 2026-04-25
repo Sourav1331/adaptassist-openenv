@@ -1,0 +1,145 @@
+name: AdaptAssist
+version: "2.1.0"
+benchmark_id: adaptassist_drift
+description: >
+  A drift-aware personal AI agent environment. The agent acts as an executive
+  assistant managing calendars, emails, and restaurant bookings. At difficulty
+  levels 2 and 3, the underlying API schemas change without warning (schema
+  drift), forcing the agent to detect and adapt. The only RL environment that
+  explicitly trains and rewards schema-drift adaptation.
+
+theme: "World Modeling — Personalized Tasks (#3.2)"
+author: Souravdanyal
+url: https://huggingface.co/spaces/Souravdanyal/adaptassist-env
+
+environment:
+  base_class: openenv.env.env.Env
+  class: AdaptAssistEnv
+  module: environment.env
+  entrypoint: app:app
+  max_steps: 30
+  difficulties:
+    - easy    # no schema drift
+    - medium  # single drift event at episode start
+    - hard    # continuous drift every 8 steps
+
+api:
+  reset: /reset
+  step:  /step
+  state: /state
+  health: /health
+  tasks: /tasks
+
+tasks:
+  - resolve_conflict
+  - reply_email
+  - book_restaurant
+  - reschedule
+  - prioritise_day
+
+observation_space:
+  type: dict
+  fields:
+    - name: tasks
+      type: list
+      description: Tasks the agent must complete this episode
+    - name: available_tools
+      type: list
+      description: Tool names the agent can call
+    - name: drift_warning
+      type: bool
+      description: Whether an undetected API schema change may be active
+    - name: active_drift_count
+      type: int
+      description: Number of currently active drift events
+    - name: detected_drift_count
+      type: int
+      description: Number of drifts the agent has correctly detected
+    - name: step
+      type: int
+      description: Current step number
+    - name: max_steps
+      type: int
+      description: Maximum steps per episode
+    - name: history
+      type: list
+      description: Last 5 tool calls and their results
+
+action_space:
+  type: dict
+  fields:
+    - name: tool
+      type: str
+      enum:
+        - read_calendar
+        - create_event
+        - delete_event
+        - get_inbox
+        - send_reply
+        - search_restaurants
+        - book_restaurant
+        - cancel_booking
+        - get_user_prefs
+        - detect_schema_change
+        - finish
+    - name: params
+      type: dict
+      description: Tool parameters
+    - name: thought
+      type: str
+      description: Optional chain-of-thought before acting
+
+reward:
+  type: float
+  range: [-1.0, 1.0]
+  dense: true
+  components:
+    - name: task_completion
+      weight: 0.40
+      description: Fraction of tasks successfully completed
+    - name: schema_adaptation
+      weight: 0.30
+      description: Rate of correct drift detection and recovery
+    - name: preference_alignment
+      weight: 0.20
+      description: Whether user cuisine/tone/time preferences were respected
+    - name: efficiency
+      weight: 0.10
+      description: Inverse of unnecessary steps used
+  penalties:
+    - name: undetected_drift
+      value: -0.20 per undetected drift
+    - name: repeated_tool_call
+      value: -0.05 per repeat beyond first
+    - name: false_positive_detection
+      value: -0.10 per incorrect detect_schema_change call
+    - name: invalid_params
+      value: -0.10 to -0.20 per malformed tool call
+
+training:
+  method: SFT → GRPO
+  model: unsloth/Llama-3.2-3B-Instruct
+  framework: trl + unsloth
+  colab_notebook: AdaptAssist_Round2_WithDatasets.ipynb
+  phases:
+    - name: SFT warmup
+      tool: unsloth + SFTTrainer
+      dataset: combined_sft.json (~7500 samples from 5 sources)
+      epochs: 2
+    - name: GRPO RL
+      tool: trl GRPOTrainer
+      steps: 300
+      reward_functions:
+        - format_reward
+        - env_reward
+        - drift_detection_reward
+
+curriculum:
+  enabled: true
+  levels:
+    - difficulty: easy
+      unlock_condition: always
+    - difficulty: medium
+      unlock_condition: mean_reward >= 0.70 over last 10 episodes on easy
+    - difficulty: hard
+      unlock_condition: mean_reward >= 0.70 over last 10 episodes on medium
