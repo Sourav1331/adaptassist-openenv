@@ -3,77 +3,514 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>AdaptAssist — Drift-Aware AI Agent Environment</title>
+<title>AdaptAssist — Drift-Aware AI Agent</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
 <style>
+  :root {
+    --bg:       #080b10;
+    --surface:  #0d1117;
+    --panel:    #111820;
+    --border:   #1e2d3d;
+    --border2:  #243447;
+    --text:     #cdd9e5;
+    --muted:    #637a91;
+    --accent:   #39d353;
+    --accent2:  #58a6ff;
+    --warn:     #f0a832;
+    --danger:   #f85149;
+    --drift:    #e8833a;
+    --glow:     rgba(57,211,83,0.15);
+    --glow2:    rgba(88,166,255,0.12);
+  }
+
   * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { font-family: 'Segoe UI', system-ui, sans-serif; background: #0f1117; color: #e2e8f0; min-height: 100vh; }
 
-  .header { background: linear-gradient(135deg, #1a202c 0%, #2d3748 100%); border-bottom: 1px solid #4a5568; padding: 20px 32px; display: flex; align-items: center; gap: 16px; }
-  .header h1 { font-size: 1.5rem; font-weight: 700; color: #68d391; }
-  .header p  { font-size: 0.85rem; color: #a0aec0; margin-top: 2px; }
-  .badge { background: #2d3748; border: 1px solid #4a5568; border-radius: 6px; padding: 3px 10px; font-size: 0.75rem; color: #90cdf4; }
+  body {
+    font-family: 'Syne', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
 
-  .layout { display: grid; grid-template-columns: 340px 1fr; gap: 16px; padding: 20px 32px; max-width: 1400px; }
+  /* animated grid bg */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(var(--border) 1px, transparent 1px),
+      linear-gradient(90deg, var(--border) 1px, transparent 1px);
+    background-size: 40px 40px;
+    opacity: 0.25;
+    pointer-events: none;
+    z-index: 0;
+  }
 
-  .panel { background: #1a202c; border: 1px solid #2d3748; border-radius: 10px; overflow: hidden; }
-  .panel-header { background: #2d3748; padding: 12px 16px; font-size: 0.8rem; font-weight: 600; color: #90cdf4; text-transform: uppercase; letter-spacing: 0.05em; display: flex; align-items: center; gap: 8px; }
-  .panel-body { padding: 16px; }
+  .wrap { position: relative; z-index: 1; }
 
-  .controls { display: flex; flex-direction: column; gap: 10px; }
-  label { font-size: 0.8rem; color: #a0aec0; margin-bottom: 4px; display: block; }
-  select, input { width: 100%; background: #2d3748; border: 1px solid #4a5568; border-radius: 6px; padding: 8px 10px; color: #e2e8f0; font-size: 0.85rem; }
-  textarea { width: 100%; background: #2d3748; border: 1px solid #4a5568; border-radius: 6px; padding: 8px 10px; color: #e2e8f0; font-size: 0.8rem; font-family: monospace; resize: vertical; }
+  /* ── HEADER ── */
+  header {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    padding: 18px 28px;
+    background: rgba(13,17,23,0.85);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
 
-  .btn { border: none; border-radius: 6px; padding: 9px 18px; cursor: pointer; font-size: 0.85rem; font-weight: 600; transition: all 0.2s; width: 100%; }
-  .btn-primary { background: #38a169; color: white; }
-  .btn-primary:hover { background: #2f855a; }
-  .btn-secondary { background: #3182ce; color: white; }
-  .btn-secondary:hover { background: #2b6cb0; }
-  .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
 
-  .task-list { display: flex; flex-direction: column; gap: 8px; }
-  .task-item { background: #2d3748; border-radius: 6px; padding: 10px 12px; border-left: 3px solid #4a5568; font-size: 0.82rem; }
-  .task-item.done { border-left-color: #38a169; opacity: 0.7; }
-  .task-item.done .task-desc::before { content: "✓ "; color: #38a169; }
-  .task-type { font-size: 0.7rem; color: #718096; margin-top: 2px; }
+  .logo-icon {
+    width: 36px;
+    height: 36px;
+    background: linear-gradient(135deg, #1a3a2a, #0d2218);
+    border: 1px solid var(--accent);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    box-shadow: 0 0 12px var(--glow);
+  }
 
-  .drift-banner { background: #744210; border: 1px solid #d69e2e; border-radius: 6px; padding: 10px 14px; font-size: 0.82rem; color: #fbd38d; margin-bottom: 12px; display: none; }
-  .drift-banner.active { display: block; }
+  .logo h1 {
+    font-size: 1.15rem;
+    font-weight: 800;
+    color: #fff;
+    letter-spacing: -0.02em;
+  }
 
-  .log { height: 380px; overflow-y: auto; font-family: monospace; font-size: 0.78rem; }
-  .log-entry { padding: 8px 12px; border-bottom: 1px solid #1a202c; }
-  .log-entry:last-child { border-bottom: none; }
-  .log-tool { color: #90cdf4; font-weight: 600; }
-  .log-reward.pos { color: #68d391; }
-  .log-reward.neg { color: #fc8181; }
-  .log-reward.zero { color: #a0aec0; }
-  .log-result { color: #a0aec0; font-size: 0.75rem; margin-top: 3px; word-break: break-all; }
+  .logo h1 span { color: var(--accent); }
 
-  .stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 12px; }
-  .stat { background: #2d3748; border-radius: 6px; padding: 10px; text-align: center; }
-  .stat-val { font-size: 1.3rem; font-weight: 700; color: #68d391; }
-  .stat-label { font-size: 0.7rem; color: #718096; margin-top: 2px; }
+  .logo p {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.65rem;
+    color: var(--muted);
+    margin-top: 1px;
+  }
 
-  .step-counter { font-size: 0.8rem; color: #a0aec0; margin-bottom: 8px; }
-  .step-bar { height: 4px; background: #2d3748; border-radius: 2px; overflow: hidden; margin-bottom: 12px; }
-  .step-fill { height: 100%; background: linear-gradient(90deg, #38a169, #d69e2e); transition: width 0.3s; }
+  .header-right {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
 
-  .tool-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-top: 8px; }
-  .tool-btn { background: #2d3748; border: 1px solid #4a5568; border-radius: 5px; padding: 6px 8px; cursor: pointer; font-size: 0.75rem; color: #e2e8f0; text-align: center; transition: all 0.15s; }
-  .tool-btn:hover { background: #3182ce; border-color: #3182ce; color: white; }
-  .tool-btn.detect { background: #744210; border-color: #d69e2e; color: #fbd38d; }
-  .tool-btn.detect:hover { background: #975a16; }
+  .tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.65rem;
+    padding: 3px 8px;
+    border-radius: 4px;
+    border: 1px solid var(--border2);
+    color: var(--muted);
+    background: var(--panel);
+  }
 
-  .score-badge { display: inline-block; padding: 2px 8px; border-radius: 10px; font-size: 0.72rem; font-weight: 600; }
-  .score-pos { background: #1c4532; color: #68d391; }
-  .score-neg { background: #4a1515; color: #fc8181; }
-  .score-zero { background: #2d3748; color: #a0aec0; }
+  .status-dot {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.7rem;
+    padding: 4px 10px;
+    border-radius: 4px;
+    border: 1px solid var(--border2);
+    background: var(--panel);
+  }
 
-  .params-area { display: none; }
-  .params-area.visible { display: block; }
+  .dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--muted);
+  }
 
-  .empty-state { text-align: center; padding: 40px 20px; color: #4a5568; font-size: 0.85rem; }
-  .empty-state .icon { font-size: 2.5rem; margin-bottom: 10px; }
+  .dot.online { background: var(--accent); box-shadow: 0 0 6px var(--accent); animation: pulse 2s infinite; }
+  .dot.offline { background: var(--danger); }
+  .dot.checking { background: var(--warn); animation: blink 1s infinite; }
+
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.5} }
+  @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.3} }
+
+  /* ── LAYOUT ── */
+  .layout {
+    display: grid;
+    grid-template-columns: 300px 1fr 280px;
+    gap: 1px;
+    background: var(--border);
+    min-height: calc(100vh - 61px);
+  }
+
+  .col {
+    background: var(--bg);
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* ── PANEL ── */
+  .panel {
+    border-bottom: 1px solid var(--border);
+  }
+
+  .panel-title {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.65rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--muted);
+    padding: 10px 16px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .panel-title .dot-accent {
+    width: 5px; height: 5px;
+    border-radius: 50%;
+    background: var(--accent2);
+  }
+
+  .panel-body { padding: 14px 16px; }
+
+  /* ── CONTROLS ── */
+  .field { margin-bottom: 10px; }
+
+  label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.62rem;
+    color: var(--muted);
+    display: block;
+    margin-bottom: 5px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+
+  select, input[type=number], input[type=text] {
+    width: 100%;
+    background: var(--panel);
+    border: 1px solid var(--border2);
+    border-radius: 5px;
+    padding: 7px 10px;
+    color: var(--text);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.78rem;
+    outline: none;
+    transition: border-color 0.15s;
+  }
+
+  select:focus, input:focus { border-color: var(--accent2); }
+
+  textarea {
+    width: 100%;
+    background: var(--panel);
+    border: 1px solid var(--border2);
+    border-radius: 5px;
+    padding: 8px 10px;
+    color: var(--accent);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.75rem;
+    resize: vertical;
+    outline: none;
+    min-height: 70px;
+    transition: border-color 0.15s;
+  }
+
+  textarea:focus { border-color: var(--accent); }
+
+  /* ── BUTTONS ── */
+  .btn {
+    width: 100%;
+    border: none;
+    border-radius: 5px;
+    padding: 9px 16px;
+    font-family: 'Syne', sans-serif;
+    font-size: 0.82rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.15s;
+    letter-spacing: 0.02em;
+  }
+
+  .btn-green {
+    background: linear-gradient(135deg, #1a4a2a, #0f3319);
+    border: 1px solid var(--accent);
+    color: var(--accent);
+    box-shadow: 0 0 0 0 var(--glow);
+  }
+
+  .btn-green:hover:not(:disabled) {
+    background: linear-gradient(135deg, #235c35, #1a4a2a);
+    box-shadow: 0 0 16px var(--glow);
+  }
+
+  .btn-blue {
+    background: linear-gradient(135deg, #1a2f4a, #0f2038);
+    border: 1px solid var(--accent2);
+    color: var(--accent2);
+  }
+
+  .btn-blue:hover:not(:disabled) {
+    background: linear-gradient(135deg, #1e3a5a, #1a2f4a);
+    box-shadow: 0 0 16px var(--glow2);
+  }
+
+  .btn:disabled { opacity: 0.35; cursor: not-allowed; }
+
+  /* ── TOOL CHIPS ── */
+  .tool-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    margin-bottom: 12px;
+  }
+
+  .chip {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.65rem;
+    padding: 4px 8px;
+    border-radius: 4px;
+    background: var(--panel);
+    border: 1px solid var(--border2);
+    color: var(--text);
+    cursor: pointer;
+    transition: all 0.12s;
+    white-space: nowrap;
+  }
+
+  .chip:hover { background: var(--border2); border-color: var(--accent2); color: var(--accent2); }
+  .chip.drift-chip { border-color: var(--drift); color: var(--drift); background: rgba(232,131,58,0.08); }
+  .chip.drift-chip:hover { background: rgba(232,131,58,0.18); }
+  .chip.finish-chip { border-color: var(--muted); }
+
+  /* ── TASKS ── */
+  .task-item {
+    padding: 10px 12px;
+    border-radius: 6px;
+    border: 1px solid var(--border2);
+    background: var(--panel);
+    margin-bottom: 6px;
+    transition: all 0.2s;
+  }
+
+  .task-item.done {
+    border-color: rgba(57,211,83,0.3);
+    background: rgba(57,211,83,0.04);
+    opacity: 0.65;
+  }
+
+  .task-desc {
+    font-size: 0.82rem;
+    color: var(--text);
+    line-height: 1.4;
+  }
+
+  .task-done .task-desc { text-decoration: line-through; }
+
+  .task-meta {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.62rem;
+    color: var(--muted);
+    margin-top: 4px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .task-status-done { color: var(--accent); }
+
+  /* ── DRIFT BANNER ── */
+  .drift-banner {
+    display: none;
+    background: rgba(232,131,58,0.1);
+    border: 1px solid var(--drift);
+    border-radius: 6px;
+    padding: 10px 12px;
+    margin-bottom: 12px;
+    font-size: 0.8rem;
+    color: var(--drift);
+    animation: driftPulse 2s infinite;
+  }
+
+  .drift-banner.active { display: flex; align-items: center; gap: 8px; }
+
+  @keyframes driftPulse {
+    0%,100% { box-shadow: 0 0 0 0 rgba(232,131,58,0); }
+    50% { box-shadow: 0 0 10px rgba(232,131,58,0.25); }
+  }
+
+  /* ── STATS ── */
+  .stat-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6px;
+    margin-bottom: 12px;
+  }
+
+  .stat {
+    background: var(--panel);
+    border: 1px solid var(--border2);
+    border-radius: 6px;
+    padding: 10px;
+    text-align: center;
+  }
+
+  .stat-val {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: var(--accent);
+    line-height: 1;
+  }
+
+  .stat-val.blue { color: var(--accent2); }
+  .stat-val.orange { color: var(--drift); }
+
+  .stat-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.58rem;
+    color: var(--muted);
+    margin-top: 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+
+  /* ── STEP BAR ── */
+  .step-info {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.65rem;
+    color: var(--muted);
+    margin-bottom: 5px;
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .step-track {
+    height: 3px;
+    background: var(--border2);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+
+  .step-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--accent), var(--warn));
+    border-radius: 2px;
+    transition: width 0.4s ease;
+    width: 0%;
+  }
+
+  /* ── LOG ── */
+  .log-wrap {
+    flex: 1;
+    overflow-y: auto;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.72rem;
+    scrollbar-width: thin;
+    scrollbar-color: var(--border2) transparent;
+  }
+
+  .log-entry {
+    padding: 10px 16px;
+    border-bottom: 1px solid var(--border);
+    animation: slideIn 0.15s ease;
+  }
+
+  @keyframes slideIn {
+    from { opacity: 0; transform: translateY(-4px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .log-top {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 4px;
+  }
+
+  .log-tool { color: var(--accent2); font-weight: 600; }
+  .log-tool.system-tool { color: var(--muted); font-style: italic; }
+  .log-tool.error-tool { color: var(--danger); }
+
+  .reward-badge {
+    font-size: 0.65rem;
+    padding: 1px 6px;
+    border-radius: 3px;
+    font-weight: 700;
+  }
+
+  .r-pos { background: rgba(57,211,83,0.15); color: var(--accent); border: 1px solid rgba(57,211,83,0.3); }
+  .r-neg { background: rgba(248,81,73,0.15); color: var(--danger); border: 1px solid rgba(248,81,73,0.3); }
+  .r-zero { background: var(--panel); color: var(--muted); border: 1px solid var(--border2); }
+
+  .log-step { margin-left: auto; color: var(--border2); font-size: 0.6rem; }
+
+  .log-result {
+    color: var(--muted);
+    font-size: 0.67rem;
+    word-break: break-all;
+    line-height: 1.5;
+    max-height: 60px;
+    overflow: hidden;
+  }
+
+  /* ── ACTION INPUT ROW ── */
+  .action-row {
+    display: flex;
+    gap: 6px;
+    margin-top: 8px;
+  }
+
+  .action-row input {
+    flex: 1;
+  }
+
+  .action-row .btn {
+    width: auto;
+    white-space: nowrap;
+    padding: 7px 14px;
+  }
+
+  /* ── EMPTY STATE ── */
+  .empty {
+    text-align: center;
+    padding: 30px 16px;
+    color: var(--border2);
+  }
+
+  .empty-icon { font-size: 2rem; margin-bottom: 8px; }
+  .empty-text { font-size: 0.75rem; font-family: 'JetBrains Mono', monospace; }
+
+  /* ── EPISODE DONE BANNER ── */
+  .done-banner {
+    display: none;
+    background: rgba(57,211,83,0.08);
+    border: 1px solid rgba(57,211,83,0.4);
+    border-radius: 6px;
+    padding: 12px 16px;
+    margin: 12px 16px;
+    text-align: center;
+    font-size: 0.85rem;
+    color: var(--accent);
+    font-weight: 700;
+  }
+
+  .done-banner.active { display: block; }
+
+  /* ── SCROLLBAR ── */
+  ::-webkit-scrollbar { width: 4px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 2px; }
 
   @media (max-width: 900px) {
     .layout { grid-template-columns: 1fr; }
@@ -81,188 +518,371 @@
 </style>
 </head>
 <body>
+<div class="wrap">
 
-<div class="header">
-  <div>
-    <h1>🤖 AdaptAssist Environment</h1>
-    <p>Drift-Aware Personal AI Agent — OpenEnv Hackathon 2026</p>
+<!-- HEADER -->
+<header>
+  <div class="logo">
+    <div class="logo-icon">🤖</div>
+    <div>
+      <h1>Adapt<span>Assist</span></h1>
+      <p>Drift-Aware Personal AI Agent · OpenEnv 2026</p>
+    </div>
   </div>
-  <div style="margin-left:auto;display:flex;gap:8px;flex-wrap:wrap;">
-    <span class="badge">Theme #3.2</span>
-    <span class="badge">World Modeling</span>
-    <span class="badge" id="health-badge">⟳ checking...</span>
+  <div class="header-right">
+    <span class="tag">Theme #3.2</span>
+    <span class="tag">World Modeling</span>
+    <div class="status-dot">
+      <div class="dot checking" id="dot"></div>
+      <span id="status-text">checking...</span>
+    </div>
   </div>
-</div>
+</header>
 
+<!-- LAYOUT -->
 <div class="layout">
 
-  <!-- LEFT: Controls + Tasks -->
-  <div style="display:flex;flex-direction:column;gap:14px;">
+  <!-- COL 1: Setup + Tasks -->
+  <div class="col">
 
+    <!-- Episode Setup -->
     <div class="panel">
-      <div class="panel-header">⚙️ Episode Setup</div>
-      <div class="panel-body controls">
-        <div>
+      <div class="panel-title"><div class="dot-accent"></div>Episode Setup</div>
+      <div class="panel-body">
+        <div class="field">
           <label>Difficulty</label>
           <select id="difficulty">
-            <option value="easy">Easy — No schema drift</option>
+            <option value="easy">Easy — No drift</option>
             <option value="medium" selected>Medium — 1 drift event</option>
             <option value="hard">Hard — Continuous drift</option>
           </select>
         </div>
-        <div>
+        <div class="field">
           <label>Seed (optional)</label>
           <input type="number" id="seed" placeholder="random" min="0" max="9999">
         </div>
-        <button class="btn btn-primary" id="reset-btn" onclick="resetEpisode()">▶ Start New Episode</button>
+        <button class="btn btn-green" id="reset-btn" onclick="resetEpisode()">▶ Start Episode</button>
       </div>
     </div>
 
-    <div class="panel">
-      <div class="panel-header">📋 Tasks</div>
+    <!-- Tasks -->
+    <div class="panel" style="flex:1">
+      <div class="panel-title"><div class="dot-accent"></div>Tasks</div>
       <div class="panel-body">
         <div class="drift-banner" id="drift-banner">
-          ⚠️ Schema drift detected! Call <code>detect_schema_change</code> to reveal changes.
+          ⚠️ Schema drift detected — call <code style="background:rgba(232,131,58,0.2);padding:1px 4px;border-radius:3px">detect_schema_change</code>
         </div>
-        <div class="task-list" id="task-list">
-          <div class="empty-state"><div class="icon">📭</div>Start an episode to see tasks</div>
+        <div id="task-list">
+          <div class="empty"><div class="empty-icon">📭</div><div class="empty-text">Start an episode</div></div>
         </div>
       </div>
     </div>
 
+    <!-- Stats -->
     <div class="panel">
-      <div class="panel-header">📊 Episode Stats</div>
+      <div class="panel-title"><div class="dot-accent"></div>Stats</div>
       <div class="panel-body">
         <div class="stat-grid">
-          <div class="stat"><div class="stat-val" id="stat-completed">—</div><div class="stat-label">Tasks Done</div></div>
-          <div class="stat"><div class="stat-val" id="stat-reward" style="color:#90cdf4">—</div><div class="stat-label">Total Reward</div></div>
-          <div class="stat"><div class="stat-val" id="stat-drifts">—</div><div class="stat-label">Drifts Found</div></div>
-          <div class="stat"><div class="stat-val" id="stat-steps">—</div><div class="stat-label">Steps Used</div></div>
+          <div class="stat">
+            <div class="stat-val" id="s-tasks">—</div>
+            <div class="stat-label">Tasks Done</div>
+          </div>
+          <div class="stat">
+            <div class="stat-val blue" id="s-reward">—</div>
+            <div class="stat-label">Total Reward</div>
+          </div>
+          <div class="stat">
+            <div class="stat-val orange" id="s-drifts">—</div>
+            <div class="stat-label">Drifts Found</div>
+          </div>
+          <div class="stat">
+            <div class="stat-val" id="s-steps">0</div>
+            <div class="stat-label">Steps</div>
+          </div>
         </div>
-        <div class="step-counter" id="step-counter">Step 0 / 30</div>
-        <div class="step-bar"><div class="step-fill" id="step-fill" style="width:0%"></div></div>
+        <div class="step-info">
+          <span id="step-label">Step 0 / 30</span>
+          <span id="step-pct">0%</span>
+        </div>
+        <div class="step-track">
+          <div class="step-fill" id="step-fill"></div>
+        </div>
       </div>
     </div>
+
   </div>
 
-  <!-- RIGHT: Action + Log -->
-  <div style="display:flex;flex-direction:column;gap:14px;">
+  <!-- COL 2: Action + Log -->
+  <div class="col">
+
+    <!-- Action -->
+    <div class="panel">
+      <div class="panel-title"><div class="dot-accent"></div>Take Action</div>
+      <div class="panel-body">
+        <div class="tool-chips" id="tool-chips">
+          <div class="empty-text" style="color:var(--border2);font-family:'JetBrains Mono',monospace;font-size:0.65rem">Start an episode to see tools</div>
+        </div>
+        <div class="field">
+          <label>Params (JSON)</label>
+          <textarea id="params-input">{}</textarea>
+        </div>
+        <div class="action-row">
+          <input type="text" id="tool-input" placeholder="tool name...">
+          <button class="btn btn-blue" style="width:auto;padding:7px 16px" id="step-btn" onclick="takeStep()" disabled>Step →</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Done Banner -->
+    <div class="done-banner" id="done-banner">🏁 Episode Complete</div>
+
+    <!-- Log -->
+    <div class="panel-title" style="padding:10px 16px;border-bottom:1px solid var(--border)">
+      <div class="dot-accent"></div>Episode Log
+      <span style="margin-left:auto;font-size:0.62rem;color:var(--muted);cursor:pointer" onclick="clearLog()">clear</span>
+    </div>
+    <div class="log-wrap" id="log">
+      <div class="empty"><div class="empty-icon">🔍</div><div class="empty-text">Actions will appear here</div></div>
+    </div>
+
+  </div>
+
+  <!-- COL 3: Reference -->
+  <div class="col">
+    <div class="panel">
+      <div class="panel-title"><div class="dot-accent"></div>Available Tools</div>
+      <div class="panel-body" style="font-family:'JetBrains Mono',monospace;font-size:0.68rem;color:var(--muted)">
+        <div style="margin-bottom:10px;color:var(--accent2);font-size:0.62rem;text-transform:uppercase;letter-spacing:0.08em">Calendar</div>
+        <div style="margin-bottom:5px">📅 <span style="color:var(--text)">read_calendar</span></div>
+        <div style="margin-bottom:5px">➕ <span style="color:var(--text)">create_event</span></div>
+        <div style="margin-bottom:14px">🗑️ <span style="color:var(--text)">delete_event</span></div>
+        <div style="margin-bottom:10px;color:var(--accent2);font-size:0.62rem;text-transform:uppercase;letter-spacing:0.08em">Email</div>
+        <div style="margin-bottom:5px">📬 <span style="color:var(--text)">get_inbox</span></div>
+        <div style="margin-bottom:14px">✉️ <span style="color:var(--text)">send_reply</span></div>
+        <div style="margin-bottom:10px;color:var(--accent2);font-size:0.62rem;text-transform:uppercase;letter-spacing:0.08em">Restaurant</div>
+        <div style="margin-bottom:5px">🍽️ <span style="color:var(--text)">search_restaurants</span></div>
+        <div style="margin-bottom:14px">📋 <span style="color:var(--text)">book_restaurant</span></div>
+        <div style="margin-bottom:10px;color:var(--accent2);font-size:0.62rem;text-transform:uppercase;letter-spacing:0.08em">System</div>
+        <div style="margin-bottom:5px">👤 <span style="color:var(--text)">get_user_prefs</span></div>
+        <div style="margin-bottom:5px;color:var(--drift)">⚠️ <span style="color:var(--drift)">detect_schema_change</span></div>
+        <div>🏁 <span style="color:var(--text)">finish</span></div>
+      </div>
+    </div>
 
     <div class="panel">
-      <div class="panel-header">🔧 Take Action</div>
-      <div class="panel-body">
-        <label>Quick tool buttons</label>
-        <div class="tool-grid" id="tool-grid">
-          <div class="empty-state" style="grid-column:1/-1;padding:16px">Start an episode first</div>
+      <div class="panel-title"><div class="dot-accent"></div>Reward Guide</div>
+      <div class="panel-body" style="font-family:'JetBrains Mono',monospace;font-size:0.68rem">
+        <div style="display:flex;justify-content:space-between;margin-bottom:7px">
+          <span style="color:var(--muted)">Task completed</span>
+          <span style="color:var(--accent)">+0.40</span>
         </div>
-        <div style="margin-top:14px;">
-          <label>Params (JSON)</label>
-          <textarea id="params-input" rows="3" placeholder='{"module": "calendar"}'>{}</textarea>
+        <div style="display:flex;justify-content:space-between;margin-bottom:7px">
+          <span style="color:var(--muted)">Drift detected</span>
+          <span style="color:var(--accent)">+0.30</span>
         </div>
-        <div style="margin-top:10px;display:flex;gap:8px;">
-          <input id="tool-input" placeholder="tool name" style="flex:1;background:#2d3748;border:1px solid #4a5568;border-radius:6px;padding:8px;color:#e2e8f0;font-size:0.85rem;">
-          <button class="btn btn-secondary" style="width:auto;padding:8px 18px;" id="step-btn" onclick="takeStep()" disabled>Step →</button>
+        <div style="display:flex;justify-content:space-between;margin-bottom:7px">
+          <span style="color:var(--muted)">Pref aligned</span>
+          <span style="color:var(--accent)">+0.20</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;margin-bottom:7px">
+          <span style="color:var(--muted)">Efficient action</span>
+          <span style="color:var(--accent)">+0.10</span>
+        </div>
+        <div style="height:1px;background:var(--border);margin:10px 0"></div>
+        <div style="display:flex;justify-content:space-between;margin-bottom:7px">
+          <span style="color:var(--muted)">Wrong tool</span>
+          <span style="color:var(--danger)">−0.10</span>
+        </div>
+        <div style="display:flex;justify-content:space-between">
+          <span style="color:var(--muted)">Repeat call</span>
+          <span style="color:var(--danger)">−0.05</span>
         </div>
       </div>
     </div>
 
-    <div class="panel" style="flex:1;">
-      <div class="panel-header">📜 Episode Log
-        <span style="margin-left:auto;font-size:0.7rem;color:#718096;cursor:pointer" onclick="clearLog()">clear</span>
-      </div>
-      <div class="log" id="log">
-        <div class="empty-state"><div class="icon">🔍</div>Actions will appear here</div>
+    <div class="panel">
+      <div class="panel-title"><div class="dot-accent"></div>How It Works</div>
+      <div class="panel-body" style="font-family:'JetBrains Mono',monospace;font-size:0.67rem;color:var(--muted);line-height:1.7">
+        1. Start episode → get tasks<br>
+        2. Call tools to complete tasks<br>
+        3. Watch for drift warnings ⚠️<br>
+        4. Call detect_schema_change<br>
+        5. Adapt params → finish
       </div>
     </div>
-
   </div>
-</div>
+
+</div><!-- end layout -->
+</div><!-- end wrap -->
 
 <script>
-const API = '';  // same origin
+const API = '';
 let episodeActive = false;
 let totalReward = 0;
 let stepCount = 0;
-const MAX_STEPS = 30;
+let maxSteps = 30;
 
 const TOOLS = [
-  {name:'read_calendar', params:{date:'2026-05-01'}},
-  {name:'create_event', params:{title:'Meeting', date:'2026-05-02', begins_at:'10:00', ends_at:'11:00'}},
-  {name:'delete_event', params:{event_id:'evt_0'}},
-  {name:'get_inbox', params:{}},
-  {name:'send_reply', params:{email_id:'eml_0', body:'Understood, thanks.', tone:'professional'}},
-  {name:'search_restaurants', params:{cuisine:'Italian'}},
-  {name:'book_restaurant', params:{restaurant_id:'rst_0', time_slot:'19:00'}},
-  {name:'get_user_prefs', params:{}},
-  {name:'detect_schema_change', params:{module:'calendar'}, special:'detect'},
-  {name:'finish', params:{}},
+  { name: 'read_calendar',       params: { date: '2026-05-01' } },
+  { name: 'create_event',        params: { title: 'Meeting', date: '2026-05-02', begins_at: '10:00', ends_at: '11:00' } },
+  { name: 'delete_event',        params: { event_id: 'evt_0' } },
+  { name: 'get_inbox',           params: {} },
+  { name: 'send_reply',          params: { email_id: 'eml_0', body: 'Understood, thanks.', tone: 'professional' } },
+  { name: 'search_restaurants',  params: { cuisine: 'Italian' } },
+  { name: 'book_restaurant',     params: { restaurant_id: 'rst_0', time_slot: '19:00' } },
+  { name: 'get_user_prefs',      params: {} },
+  { name: 'detect_schema_change',params: { module: 'calendar' }, type: 'drift' },
+  { name: 'finish',              params: {}, type: 'finish' },
 ];
 
+// ── Health check ──────────────────────────────────────────────────
 async function checkHealth() {
+  const dot = document.getElementById('dot');
+  const txt = document.getElementById('status-text');
   try {
-    const r = await fetch(`${API}/health`);
+    const r = await fetch(`${API}/health`, { signal: AbortSignal.timeout(8000) });
     const d = await r.json();
-    document.getElementById('health-badge').textContent = d.status === 'ok' ? '✅ Online' : '⚠️ Error';
+    if (d.status === 'ok') {
+      dot.className = 'dot online';
+      txt.textContent = 'online';
+    } else {
+      dot.className = 'dot offline';
+      txt.textContent = 'error';
+    }
   } catch(e) {
-    document.getElementById('health-badge').textContent = '❌ Offline';
+    dot.className = 'dot offline';
+    txt.textContent = 'offline';
   }
 }
 
+// ── Reset ─────────────────────────────────────────────────────────
 async function resetEpisode() {
   const difficulty = document.getElementById('difficulty').value;
-  const seedVal = document.getElementById('seed').value;
-  const body = {difficulty};
+  const seedVal    = document.getElementById('seed').value;
+  const body       = { difficulty };
   if (seedVal) body.seed = parseInt(seedVal);
 
-  document.getElementById('reset-btn').disabled = true;
+  const btn = document.getElementById('reset-btn');
+  btn.disabled = true;
+  btn.textContent = '⟳ Starting...';
+
   try {
-    const r = await fetch(`${API}/reset`, {method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(body)});
+    const r = await fetch(`${API}/reset`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body),
+      signal: AbortSignal.timeout(15000)
+    });
+
+    if (!r.ok) throw new Error(`Server error ${r.status}`);
     const d = await r.json();
+
     episodeActive = true;
-    totalReward = 0;
-    stepCount = 0;
-    updateFromObs(d.observation);
-    document.getElementById('step-btn').disabled = false;
+    totalReward   = 0;
+    stepCount     = 0;
+    maxSteps      = d.observation?.max_steps || 30;
+
     document.getElementById('log').innerHTML = '';
-    addLog('system', `Episode started — difficulty: ${difficulty}`, 0, {});
+    document.getElementById('done-banner').classList.remove('active');
+    document.getElementById('step-btn').disabled = false;
+
+    renderTasks(d.observation?.tasks || []);
+    renderToolChips();
+    updateDriftBanner(d.observation?.drift_warning || false);
+    updateStats(0, 0, d.observation);
+    updateStepBar(0, maxSteps);
+    addLog('system', `Episode started · difficulty: ${difficulty}`, null, stepCount);
+
   } catch(e) {
-    addLog('error', `Reset failed: ${e.message}`, 0, {});
+    addLog('error', `Reset failed: ${e.message} — is the environment Space awake?`, null, stepCount);
   }
-  document.getElementById('reset-btn').disabled = false;
+
+  btn.disabled = false;
+  btn.textContent = '▶ Start Episode';
 }
 
+// ── Step ──────────────────────────────────────────────────────────
 async function takeStep() {
   if (!episodeActive) return;
   const tool = document.getElementById('tool-input').value.trim();
-  if (!tool) return;
+  if (!tool) { document.getElementById('tool-input').focus(); return; }
 
   let params = {};
-  try { params = JSON.parse(document.getElementById('params-input').value || '{}'); }
-  catch(e) { addLog('error', 'Invalid JSON params', 0, {}); return; }
+  try {
+    params = JSON.parse(document.getElementById('params-input').value || '{}');
+  } catch(e) {
+    addLog('error', 'Invalid JSON in params', null, stepCount);
+    return;
+  }
 
   document.getElementById('step-btn').disabled = true;
+
   try {
     const r = await fetch(`${API}/step`, {
-      method:'POST', headers:{'Content-Type':'application/json'},
-      body: JSON.stringify({tool, params})
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ tool, params }),
+      signal: AbortSignal.timeout(15000)
     });
+
+    if (!r.ok) throw new Error(`Server error ${r.status}`);
     const d = await r.json();
 
-    totalReward += d.reward;
+    totalReward += d.reward || 0;
     stepCount++;
-    addLog(tool, JSON.stringify(d.tool_result).substring(0, 200), d.reward, d);
-    updateFromObs(d.observation);
-    updateStats(d);
+
+    const resultStr = d.tool_result
+      ? JSON.stringify(d.tool_result).substring(0, 300)
+      : '(no result)';
+
+    addLog(tool, resultStr, d.reward, stepCount);
+    renderTasks(d.observation?.tasks || []);
+    updateDriftBanner(d.observation?.drift_warning || false);
+    updateStats(d.tasks_completed, d.total_tasks, d.observation);
+    updateStepBar(d.observation?.step || stepCount, d.observation?.max_steps || maxSteps);
 
     if (d.done) {
       episodeActive = false;
       document.getElementById('step-btn').disabled = true;
-      addLog('🏁 EPISODE DONE', `Final reward: ${totalReward.toFixed(4)}`, 0, {});
+      document.getElementById('done-banner').classList.add('active');
+      document.getElementById('done-banner').textContent =
+        `🏁 Episode Complete · Final Reward: ${totalReward.toFixed(4)}`;
+      addLog('system', `Episode done · total reward: ${totalReward.toFixed(4)}`, null, stepCount);
     }
+
   } catch(e) {
-    addLog('error', `Step failed: ${e.message}`, 0, {});
+    addLog('error', `Step failed: ${e.message}`, null, stepCount);
   }
+
   if (episodeActive) document.getElementById('step-btn').disabled = false;
+}
+
+// ── Render helpers ────────────────────────────────────────────────
+function renderTasks(tasks) {
+  const el = document.getElementById('task-list');
+  if (!tasks.length) {
+    el.innerHTML = '<div class="empty"><div class="empty-icon">📭</div><div class="empty-text">No tasks</div></div>';
+    return;
+  }
+  el.innerHTML = tasks.map(t => `
+    <div class="task-item ${t.completed ? 'done' : ''}">
+      <div class="task-desc">${t.completed ? '✓ ' : ''}${t.description}</div>
+      <div class="task-meta">
+        <span>${t.type}</span>
+        <span class="${t.completed ? 'task-status-done' : ''}">${t.completed ? 'done' : 'pending'}</span>
+      </div>
+    </div>
+  `).join('');
+}
+
+function renderToolChips() {
+  const el = document.getElementById('tool-chips');
+  el.innerHTML = TOOLS.map(t => `
+    <div class="chip ${t.type === 'drift' ? 'drift-chip' : t.type === 'finish' ? 'finish-chip' : ''}"
+         onclick='setTool("${t.name}", ${JSON.stringify(t.params)})'>
+      ${t.name}
+    </div>
+  `).join('');
 }
 
 function setTool(name, params) {
@@ -270,71 +890,72 @@ function setTool(name, params) {
   document.getElementById('params-input').value = JSON.stringify(params, null, 2);
 }
 
-function updateFromObs(obs) {
-  if (!obs) return;
+function updateDriftBanner(active) {
+  document.getElementById('drift-banner').classList.toggle('active', active);
+}
 
-  // Tasks
-  const taskList = document.getElementById('task-list');
-  if (obs.tasks && obs.tasks.length) {
-    taskList.innerHTML = obs.tasks.map(t => `
-      <div class="task-item ${t.completed ? 'done' : ''}">
-        <div class="task-desc">${t.description}</div>
-        <div class="task-type">${t.type} · ${t.completed ? '✓ done' : 'pending'}</div>
-      </div>
-    `).join('');
+function updateStats(tasksCompleted, totalTasks, obs) {
+  // tasks
+  if (tasksCompleted !== undefined && totalTasks !== undefined) {
+    document.getElementById('s-tasks').textContent = `${tasksCompleted}/${totalTasks}`;
+  }
+  // reward
+  document.getElementById('s-reward').textContent = totalReward.toFixed(3);
+  // drifts from observation
+  if (obs) {
+    const detected = obs.detected_drift_count ?? '—';
+    const active   = obs.active_drift_count   ?? '—';
+    document.getElementById('s-drifts').textContent =
+      (detected !== '—' && active !== '—') ? `${detected}/${active}` : '—';
+  }
+  // steps
+  document.getElementById('s-steps').textContent = stepCount;
+}
+
+function updateStepBar(step, max) {
+  const pct = Math.min(100, Math.round((step / max) * 100));
+  document.getElementById('step-fill').style.width = `${pct}%`;
+  document.getElementById('step-label').textContent = `Step ${step} / ${max}`;
+  document.getElementById('step-pct').textContent   = `${pct}%`;
+}
+
+function addLog(tool, resultStr, reward, step) {
+  const log = document.getElementById('log');
+  if (log.querySelector('.empty')) log.innerHTML = '';
+
+  let rewardHtml = '';
+  if (reward !== null && reward !== undefined) {
+    const cls  = reward > 0 ? 'r-pos' : reward < 0 ? 'r-neg' : 'r-zero';
+    const sign = reward > 0 ? '+' : '';
+    rewardHtml = `<span class="reward-badge ${cls}">${sign}${reward.toFixed(3)}</span>`;
   }
 
-  // Drift warning
-  const banner = document.getElementById('drift-banner');
-  banner.classList.toggle('active', !!obs.drift_warning);
-
-  // Tool buttons
-  const grid = document.getElementById('tool-grid');
-  grid.innerHTML = TOOLS.map(t => `
-    <div class="tool-btn ${t.special || ''}" onclick='setTool("${t.name}", ${JSON.stringify(t.params)})'>${t.name}</div>
-  `).join('');
-
-  // Step bar
-  const step = obs.step || 0;
-  const max  = obs.max_steps || MAX_STEPS;
-  document.getElementById('step-counter').textContent = `Step ${step} / ${max}`;
-  document.getElementById('step-fill').style.width = `${(step/max)*100}%`;
-}
-
-function updateStats(d) {
-  document.getElementById('stat-completed').textContent = d.tasks_completed !== undefined
-    ? `${d.tasks_completed}/${d.total_tasks}` : '—';
-  document.getElementById('stat-reward').textContent = totalReward.toFixed(3);
-  document.getElementById('stat-drifts').textContent =
-    d.observation ? `${d.observation.detected_drift_count}/${d.observation.active_drift_count}` : '—';
-  document.getElementById('stat-steps').textContent = stepCount;
-}
-
-function addLog(tool, resultStr, reward, full) {
-  const log = document.getElementById('log');
-  const isFirst = log.querySelector('.empty-state');
-  if (isFirst) log.innerHTML = '';
-
-  const cls = reward > 0 ? 'pos' : reward < 0 ? 'neg' : 'zero';
-  const scoreCls = reward > 0 ? 'score-pos' : reward < 0 ? 'score-neg' : 'score-zero';
-  const sign = reward > 0 ? '+' : '';
+  const toolCls = tool === 'system' ? 'system-tool' : tool === 'error' ? 'error-tool' : '';
 
   const el = document.createElement('div');
   el.className = 'log-entry';
   el.innerHTML = `
-    <div style="display:flex;align-items:center;gap:8px;">
-      <span class="log-tool">${tool}</span>
-      <span class="score-badge ${scoreCls}">${sign}${reward.toFixed(3)}</span>
-      <span style="margin-left:auto;font-size:0.7rem;color:#4a5568">step ${stepCount}</span>
+    <div class="log-top">
+      <span class="log-tool ${toolCls}">${tool}</span>
+      ${rewardHtml}
+      <span class="log-step">step ${step}</span>
     </div>
-    <div class="log-result">${resultStr}</div>
+    <div class="log-result">${resultStr || ''}</div>
   `;
   log.prepend(el);
 }
 
 function clearLog() {
-  document.getElementById('log').innerHTML = '<div class="empty-state"><div class="icon">🔍</div>Log cleared</div>';
+  document.getElementById('log').innerHTML =
+    '<div class="empty"><div class="empty-icon">🔍</div><div class="empty-text">Log cleared</div></div>';
 }
+
+// Enter key on tool input triggers step
+document.addEventListener('DOMContentLoaded', () => {
+  document.getElementById('tool-input').addEventListener('keydown', e => {
+    if (e.key === 'Enter' && !document.getElementById('step-btn').disabled) takeStep();
+  });
+});
 
 checkHealth();
 </script>
